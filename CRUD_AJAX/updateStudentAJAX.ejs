@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Student</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 flex items-center justify-center min-h-screen">
+
+<div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Update Student</h1>
+
+    <form onsubmit="return updateForm()" class="space-y-4">
+        <input type="hidden" id="student_id" name="student_id" value="<%= updatestudent[0].student_id %>">
+
+        <div>
+            <label class="block text-gray-700 font-medium">Name</label>
+            <input type="text" id="name" name="name" value="<%= updatestudent[0].name %>" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-gray-700 font-medium">Email</label>
+            <input type="email" id="email" name="email" value="<%= updatestudent[0].email %>" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-gray-700 font-medium">Age</label>
+            <input type="number" id="age" name="age" value="<%=updatestudent[0].age %>" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-gray-700 font-medium">Class</label>
+            <input type="text" id="class" name="class" value="<%=updatestudent[0].class %>" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="flex justify-between mt-4">
+            <a href="/studentsData" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700 transition">Cancel</a>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-800 transition">Update</button>
+        </div>
+    </form>
+    <div id="response" class=" text-center p-4 text-red-900 font-bold  ">
+
+    </div>
+</div>
+
+
+
+
+<script>
+    function updateForm()
+    {
+        var name = document.getElementById("name").value;
+        var email = document.getElementById("email").value;
+        var age = document.getElementById("age").value;
+        var Class = document.getElementById("class").value;
+        var id  = document.getElementById("student_id").value;
+
+
+        var req = new XMLHttpRequest();
+        req.open("POST", '/update_studentAJAX', true);
+        req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        req.send("name="+name+"&email="+email+"&age="+age+"&class="+Class+"&student_id="+id);
+        //here (&name , &class ... are the column names of the database)
+        req.onreadystatechange = function() {
+            if (req.readyState === 4 && req.status === 200) {
+            document.getElementById("response").innerText = req.responseText;
+            setTimeout(function(){
+               window.open('/studentsData', '_self');
+            },2000);
+            }
+        }
+
+        return false;
+    }
+</script>
+</body>
+</html>
