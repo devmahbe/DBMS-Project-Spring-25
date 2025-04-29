@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="adminLogin.css">
+</head>
+<body>
+<div class="container">
+    <div class="forms-container">
+        <div class="signin-signup">
+
+            <form action="" class="sign-in-form">
+                <h2 class="title">Admin Login</h2>
+
+                <div class="input-field">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Username">
+                </div>
+
+                <div class="input-field">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="Email">
+                </div>
+
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Password">
+                </div>
+
+                <div class="input-field">
+                    <i class="fas fa-location-dot"></i>
+                    <select class="district-select">
+                        <option value="" disabled selected>Select District</option>
+                        <option>Dhaka</option>
+                        <option>Chittagong</option>
+                        <option>Barishal</option>
+                        <option>Rajshahi</option>
+                        <option>Bogura</option>
+                    </select>
+                </div>
+
+                <input type="submit" value="Login" class="btn solid">
+
+                <div class="social-media">
+                    <a href="#" class="social-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="panels-container">
+        <div class="panel left-panel">
+            <div class="content">
+                <h3>Welcome Admin</h3>
+                <p>Manage with Care</p>
+            </div>
+            <img src="img/admin_login.svg" alt="image" class="image">
+        </div>
+    </div>
+</div>
+
+<script src="admin_app.js"></script>
+</body>
+</html>
