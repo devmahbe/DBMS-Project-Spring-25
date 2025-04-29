@@ -111,7 +111,7 @@ form.sign-in-form {
 }
 
 .social-media {
-    display: flex;
+   display : flex;
     justify-content: center;
 }
 
@@ -412,6 +412,8 @@ form.sign-in-form {
         left: 50%;
     }
 }
+
+
 
 
 
