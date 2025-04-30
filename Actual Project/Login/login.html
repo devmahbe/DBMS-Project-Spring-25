@@ -5,77 +5,70 @@
     <title>Sign In & Sign up Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="CSS/FormValidationSignUp.css">
+    <link rel="stylesheet" href="CSS/login.css">
 </head>
 <body>
     <div class="container">
         <div class="forms-container">
             <div class="signin-signup">
-
+                <!----------------------Sign in Form---------------------------------------------------------------------------->
                 <form action="" class="sign-in-form">
                     <h2 class="title">Sign In</h2>
-                     <div class="input-field">
-                         <i class="fas fa-user"></i>
-                         <input type="text" placeholder="Username">
-
-                     </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Password">
-
-                    </div>
-                    <input type="submit" value="Login" class="btn solid">
-
-
-                    <div class="social-media">
-                         <a href="#" class="social-icon">
-                             <i class="fa-solid fa-user-tie"></i>
-                         </a>
-
-                    </div>
-
-
-                </form>
-
-                <form action="" class="sign-up-form">
-                    <h2 class="title">Sign Up</h2>
                     <div class="input-field">
                         <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Username">
-
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-envelope"></i>
-                        <input type="text" placeholder="Email">
-
+                        <input type="text" placeholder="Username" id="login-username" onkeyup="validateName()">
+                        <span id="name-error-sign-in"></span>
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Password">
-
+                        <input type="password" placeholder="Password" id="login-password">
                     </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Confirm-Password">
-
-                    </div>
-                    <input type="submit" value="SIGN UP" class="btn solid">
-
-
+                    <input type="submit" value="Login" class="btn solid">
                     <div class="social-media">
                         <a href="#" class="social-icon">
                             <i class="fa-solid fa-user-tie"></i>
                         </a>
-
                     </div>
-
-
+                </form>
+                <!----------------------Sign up Form---------------------------------------------------------------------------->
+                <form action="" class="sign-up-form" onsubmit="return validateForm()">
+                    <h2 class="title">Sign Up</h2>
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        <input type="text" placeholder="Username" id="signup-username" onkeyup="validateName()">
+                        <span id="name-error-signup"></span>
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" placeholder="@gmail.com" id="contact-email" onkeyup="validateEmail()">
+                        <span id="email-error"></span>
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" id="signup-password">
+                        <span id="password-error"></span>
+                        <i class="far fa-eye toggle-password" onclick="togglePassword('signup-password', this)"></i>
+                    </div>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Confirm-Password" id="confirm-password">
+                        <span id="confirm-password-error"></span>
+                        <i class="far fa-eye toggle-password" onclick="togglePassword('confirm-password', this)"></i>
+                    </div>
+                    <input type="submit" value="SIGN UP" class="btn solid" >
+                    <span id ="submit-error"></span>
+                    <div class="social-media">
+                        <a href="#" class="social-icon">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </a>
+                    </div>
                 </form>
                 
             </div>
 
         </div>
-
+<!-------------------------------------Container For Animations------------------------------------------------------------------------------------>
         <div class="panels-container">
             <div class="panel left-panel">
                 <div class="content">
@@ -104,8 +97,133 @@
 
     </div>
 
-    <script src="app.js">
+    <script src="Scripts/app.js">
 
     </script>
+<script >
+    document.querySelector(".sign-up-form").addEventListener("submit", function (e) {
+        if (!validateForm()) e.preventDefault();
+    });
+
+    var nameError = document.getElementById("name-error-signup");
+    var emailError = document.getElementById("email-error");
+    var submitError = document.getElementById("submit-error");
+
+
+
+    function togglePassword(fieldId, icon) {
+        const field = document.getElementById(fieldId);
+        if (field.type === "password") {
+            field.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            field.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+
+
+    function validateName() {
+        var name = document.getElementById("signup-username").value;
+
+
+        if (name.length === 0) {
+            nameError.innerHTML = "username is required!";
+
+            return false;
+
+        }
+        if (name.length <= 5) {
+            nameError.innerHTML = "username must contain at least 5 characters!";
+
+            return false;
+
+        }
+
+        if (!name.match(/^[^\s]+$/)) {
+            nameError.innerHTML = "Username can't contain spaces!";
+
+            return false;
+        }
+        nameError.innerHTML='<i class="fas fa-check-circle"></i>';
+        return true;
+
+    }
+
+    function validateEmail() {
+        var email = document.getElementById("contact-email").value;
+
+
+        if (email.length === 0) {
+            emailError.innerHTML = "Email is required";
+
+            return false;
+
+        }
+        if (!email.match(/^[A-Za-z\._\-[0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) {
+            emailError.innerHTML = "Invalid email!";
+
+            return false;
+        }
+
+        emailError.innerHTML='<i class="fas fa-check-circle"></i>';
+        return true;
+
+    }
+
+    function checkPassword() {
+        const password = document.getElementById("signup-password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+        const passwordError = document.getElementById("password-error");
+        const confirmPasswordError = document.getElementById("confirm-password-error");
+
+        // Clear previous messages
+        passwordError.innerHTML = "";
+        confirmPasswordError.innerHTML = "";
+
+        // Password must be at least 6 characters, contain a letter, a number, and a special character
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+        if (password.length === 0) {
+            passwordError.innerHTML = "Password is required!";
+            return false;
+        }
+
+        if (!passwordRegex.test(password)) {
+            passwordError.innerHTML = "Must contain letter, number, special character";
+            return false;
+        } else {
+            passwordError.innerHTML = '<i class="fas fa-check-circle"></i>';
+        }
+
+        if (confirmPassword.length === 0) {
+            confirmPasswordError.innerHTML = "Please confirm your password!";
+            return false;
+        }
+
+        if (password !== confirmPassword) {
+            confirmPasswordError.innerHTML = "Passwords do not match!";
+            return false;
+        } else {
+            confirmPasswordError.innerHTML = '<i class="fas fa-check-circle"></i>';
+        }
+
+        return true;
+
+    }
+
+    function validateForm(){
+        if(!validateName() || !validateEmail() || !checkPassword()) {
+            submitError.style.display = "block";
+            submitError.innerHTML = "Please fix errors to submit!";
+            setTimeout(()=>{
+                submitError.style.display = "none";
+            },3000)
+            return false;
+        }
+    }
+</script>
 </body>
 </html>

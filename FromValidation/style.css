@@ -1,0 +1,142 @@
+/* General styling for the body */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Styling the container */
+.container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+}
+
+/* Styling the form */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* Styling for input groups */
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.input-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.input-group input,
+.input-group textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Styling the textarea */
+.input-group textarea {
+    resize: none;
+    font-family: Arial, serif;
+    font-size: 14px;
+}
+
+/* Button styling */
+.submit-button {
+    padding: 10px 15px;
+    background-color: #4a90e2;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s;
+}
+
+.submit-button:hover {
+    background-color: #357abd;
+}
+
+.submit-button:active {
+    transform: scale(0.98);
+}
+
+/* Add subtle animation to the form container */
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.input-group span{
+    position: relative ;
+    margin-top: 15px;
+    margin-left: 8px;
+    bottom: 12px;
+    right: 3px;
+    font-size: 14px;
+    color: red;
+
+}
+
+#submit-error{
+    color: red;
+    font-size: 14px;
+    position: relative;
+    top: 12px;
+    text-align: center;
+}
+.input-group span i{
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-190%);
+    font-size: 15px;
+    color: seagreen;
+
+}
+form .fas.fa-paper-plane {
+    font-size: 30px;
+    color: #4a90e2;
+    margin-bottom: 20px;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
