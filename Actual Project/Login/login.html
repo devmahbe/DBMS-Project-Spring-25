@@ -23,6 +23,7 @@
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
                         <input type="password" placeholder="Password" id="login-password">
+                        <span id="password-error-sign-in"></span>
                     </div>
                     <input type="submit" value="Login" class="btn solid">
                     <div class="social-media">
@@ -194,8 +195,6 @@
         if (!passwordRegex.test(password)) {
             passwordError.innerHTML = "Must contain letter, number, special character";
             return false;
-        } else {
-            passwordError.innerHTML = '<i class="fas fa-check-circle"></i>';
         }
 
         if (confirmPassword.length === 0) {
@@ -206,9 +205,9 @@
         if (password !== confirmPassword) {
             confirmPasswordError.innerHTML = "Passwords do not match!";
             return false;
-        } else {
-            confirmPasswordError.innerHTML = '<i class="fas fa-check-circle"></i>';
         }
+        passwordError.innerHTML = '<i class="fas fa-check-circle"></i>';
+        confirmPasswordError.innerHTML = '<i class="fas fa-check-circle"></i>';
 
         return true;
 
