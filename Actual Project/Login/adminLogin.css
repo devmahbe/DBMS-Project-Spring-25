@@ -8,12 +8,13 @@
 
 body, input, select {
     font-family: "Poppins", sans-serif;
+    background-color: #D3D9D4;
 }
 
 .container {
     position: relative;
     width: 100%;
-    background-color: #fff;
+    background-color: #D3D9D4;
     min-height: 100vh;
     overflow: hidden;
 }
@@ -106,26 +107,38 @@ form {
 
 /* Button Styling */
 .btn {
-    width: 160px;
-    background-color: #f6e58d;
+    width: 150px;
+    background-color: #212A31;
     border: none;
     outline: none;
     height: 49px;
     border-radius: 49px;
-    color: #2c2c2c;
+    color: #D3D9D4;
     text-transform: uppercase;
     font-weight: 600;
-    margin: 15px 0;
+    margin: 10px 0;
     cursor: pointer;
-    transition: all 0.4s ease;
+    transition: 0.5s;
+    box-shadow: 0 0 0 transparent; /* Default state */
 }
 
 .btn:hover {
-    background-color: #f9d85e;
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    background-color: #0F3E52;
+    box-shadow: 0 0 8px #0F3E52aa, 0 0 15px #0F3E5288;
+    animation: pulseGlowDark 1.6s infinite ease-in-out;
 }
 
+@keyframes pulseGlowDark {
+    0% {
+        box-shadow: 0 0 8px #0F3E52aa, 0 0 15px #0F3E5288;
+    }
+    50% {
+        box-shadow: 0 0 12px #0F3E52cc, 0 0 22px #0F3E52aa;
+    }
+    100% {
+        box-shadow: 0 0 8px #0F3E52aa, 0 0 15px #0F3E5288;
+    }
+}
 /* Dropdown Arrow */
 .input-field select {
     background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="gray" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
@@ -181,25 +194,26 @@ form {
 
 }
 
-.social-icon {
+.social-icon{
     height: 46px;
     width: 46px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 0.45rem;
-    color: #333;
+    margin: 2rem 0.45rem;
+    color: #748D92;
     border-radius: 50%;
-    border: 1px solid #333;
+    border: 1px solid #748D92;
     text-decoration: none;
     font-size: 1.1rem;
     transition: 0.3s;
 }
 
 .social-icon:hover {
-    color: #f9d85e;
-    border-color: #f9d85e;
+    color:#212A31 ;
+    border-color: #212A31;
 }
+
 
 /* Responsive */
 @media (max-width: 768px) {

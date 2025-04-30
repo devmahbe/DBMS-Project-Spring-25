@@ -11,15 +11,15 @@
 body,
 input {
     font-family: "Poppins", sans-serif;
-
+    background-color: #D3D9D4;
 }
 
 .container {
     position: relative;
-    width: 100%;
-    background-color: #fff;
+    width:100%;
+    background-color: #D3D9D4;
     min-height: 100vh;
-    overflow: hidden;
+    overflow:hidden;
 }
 
 .forms-container {
@@ -115,34 +115,34 @@ form.sign-in-form {
     justify-content: center;
 }
 
-.social-icon {
+.social-icon{
     height: 46px;
     width: 46px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 0.45rem;
-    color: #333;
+    margin: 2rem 0.45rem;
+    color: #748D92;
     border-radius: 50%;
-    border: 1px solid #333;
+    border: 1px solid #748D92;
     text-decoration: none;
     font-size: 1.1rem;
     transition: 0.3s;
 }
 
 .social-icon:hover {
-    color: #f9d85e;
-    border-color: #f9d85e;
+    color:#212A31 ;
+    border-color: #212A31;
 }
 
 .btn {
     width: 150px;
-    background-color: #f6e58d;
+    background-color: #212A31;
     border: none;
     outline: none;
     height: 49px;
     border-radius: 49px;
-    color: #2c2c2c;
+    color: #D3D9D4;
     text-transform: uppercase;
     font-weight: 600;
     margin: 10px 0;
@@ -151,7 +151,7 @@ form.sign-in-form {
 }
 
 .btn:hover {
-    background-color:#f9d85e ;
+    background-color:#0F3E52 ;
 }
 .panels-container {
     position: absolute;
@@ -161,7 +161,9 @@ form.sign-in-form {
     left: 0;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+
 }
+
 
 .container:before {
     content: "";
@@ -171,14 +173,14 @@ form.sign-in-form {
     top: -10%;
     right: 48%;
     transform: translateY(-50%);
-    background-image: linear-gradient(-45deg, #f9d85e 0%, #fdf5c4 100%);
+    background-image: linear-gradient(-45deg,#212A31 0%, #4c6977 100%);
     transition: 1.8s ease-in-out;
     border-radius: 50%;
     z-index: 6;
 }
 
 .image {
-    width: 100%;
+    width: 200%;
     transition: transform 1.1s ease-in-out;
     transition-delay: 0.4s;
     margin :0;
@@ -201,6 +203,7 @@ form.sign-in-form {
 .right-panel {
     pointer-events: none;
     padding: 3rem 12% 2rem 17%;
+
 }
 
 .panel .content {
@@ -214,30 +217,43 @@ form.sign-in-form {
     font-weight: 800;
     line-height: 1;
     font-size: 1.7rem;
-    color: #2c2c2c;
+    color: #ffffff;
 
 }
 
 .panel p {
     font-size: 0.95rem;
     padding: 0.7rem 0;
-    color: #2c2c2c;
+    color: #ffffff;
 }
 
 .btn.transparent {
     background: none;
-    color: #2c2c2c;
-    border: 2px solid #2c2c2c;
+    color: #ffffff;
+    border: 2px solid #ffffff;
     width: 130px;
     height: 41px;
     font-weight: 600;
     font-size: 0.8rem;
     margin-top: 40px;
-    transition: 0.5s;
+    transition: 0.5s ease;
 }
 .btn.transparent:hover {
     color: #ffffff;
     border-color: #ffffff;
+    box-shadow: 0 0 6px #ffffffaa, 0 0 12px #ffffff66;
+    animation: pulseGlow 1.5s infinite ease-in-out;
+}
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 6px #ffffffaa, 0 0 12px #ffffff66;
+    }
+    50% {
+        box-shadow: 0 0 10px #ffffffcc, 0 0 18px #ffffff88;
+    }
+    100% {
+        box-shadow: 0 0 6px #ffffffaa, 0 0 12px #ffffff66;
+    }
 }
 
 .right-panel .image,
