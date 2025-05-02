@@ -324,6 +324,7 @@ form.sign-in-form {
     transform: scale(1.07);
     filter: drop-shadow(0 25px 40px rgba(255, 255, 255, 0.6));
 }
+
 @keyframes float {
     0% {
         transform: translateY(0px);
@@ -335,6 +336,8 @@ form.sign-in-form {
         transform: translateY(0px);
     }
 }
+
+
 
 @media (max-width: 870px) {
     .container {
