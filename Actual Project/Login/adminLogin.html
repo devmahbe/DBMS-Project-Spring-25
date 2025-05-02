@@ -6,6 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="CSS/adminLogin.css">
+    <link rel="stylesheet" href="CSS/FormValidationSignUp.css">
 </head>
 <body>
 <div class="container">
@@ -17,22 +18,25 @@
 
                 <div class="input-field">
                     <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Username">
+                    <input type="text" placeholder="Username" name="username">
+                    <span id="name-error-admin"></span>
                 </div>
 
                 <div class="input-field">
                     <i class="fas fa-envelope"></i>
-                    <input type="email" placeholder="Email">
+                    <input type="email" placeholder="Email" name="email">
+                    <span id="email-error-admin"></span>
                 </div>
 
                 <div class="input-field">
                     <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Password">
+                    <input type="password" placeholder="Password" name="password">
+                    <span id="password-error-admin"></span>
                 </div>
 
                 <div class="input-field">
                     <i class="fas fa-location-dot"></i>
-                    <select class="district-select">
+                    <select class="district-select" name="district">
                         <option value="" disabled selected>Select District</option>
                         <option>Dhaka</option>
                         <option>Chittagong</option>
@@ -45,7 +49,7 @@
                 <input type="submit" value="Login" class="btn solid">
 
                 <div class="social-media">
-                    <a href="#" class="social-icon">
+                    <a href="login.html" class="social-icon">
                         <i class="fa-solid fa-user"></i>
                     </a>
                 </div>
@@ -61,11 +65,69 @@
                 <h3>Welcome Admin</h3>
                 <p>Manage with Care</p>
             </div>
-            <img src="img/admin_login.svg" alt="image" class="image">
+            <img src="img/secureVOICE.png" alt="image" class="image">
         </div>
     </div>
 </div>
 
-<script src="admin_app.js"></script>
+<script >
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector(".sign-in-form");
+        const username = form.querySelector("input[type='text']");
+        const email = form.querySelector("input[type='email']");
+        const password = form.querySelector("input[type='password']");
+        const district = form.querySelector(".district-select");
+
+        const nameError = document.getElementById("name-error-admin");
+        const emailError = document.getElementById("email-error-admin");
+        const passwordError = document.getElementById("password-error-admin");
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault(); // prevent actual submission
+
+            let valid = true;
+
+            // Username Validation
+            if (username.value.trim() === "") {
+                nameError.textContent = "Username is required.";
+                nameError.style.color = "red";
+                valid = false;
+            } else {
+                nameError.textContent = "";
+            }
+
+            // Email Validation
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            if (!emailPattern.test(email.value)) {
+                emailError.textContent = "Enter a valid email.";
+                emailError.style.color = "red";
+                valid = false;
+            } else {
+                emailError.textContent = "";
+            }
+
+            // Password Validation
+            if (password.value.length < 6) {
+                passwordError.textContent = "Password must be at least 6 characters.";
+                passwordError.style.color = "red";
+                valid = false;
+            } else {
+                passwordError.textContent = "";
+            }
+
+            // District Validation
+            if (!district.value) {
+                alert("Please select a district.");
+                valid = false;
+            }
+
+            if (valid) {
+                // If all fields are valid, you can submit or handle login logic here
+                alert("Login successful (This is just a demo validation)!");
+                form.submit(); // or handle with AJAX
+            }
+        });
+    });
+</script>
 </body>
 </html>

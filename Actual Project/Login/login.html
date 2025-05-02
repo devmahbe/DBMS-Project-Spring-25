@@ -13,7 +13,7 @@
         <div class="forms-container">
             <div class="signin-signup">
                 <!----------------------Sign in Form---------------------------------------------------------------------------->
-                <form action="" class="sign-in-form">
+                <form action="" class="sign-in-form" onsubmit="return validateLoginForm()">
                     <h2 class="title">Sign In</h2>
                     <div class="input-field">
                         <i class="fas fa-user"></i>
@@ -27,7 +27,7 @@
                     </div>
                     <input type="submit" value="Login" class="btn solid">
                     <div class="social-media">
-                        <a href="#" class="social-icon">
+                        <a href="adminLogin.html" class="social-icon">
                             <i class="fa-solid fa-user-tie"></i>
                         </a>
                     </div>
@@ -60,7 +60,7 @@
                     <input type="submit" value="SIGN UP" class="btn solid" >
                     <span id ="submit-error"></span>
                     <div class="social-media">
-                        <a href="#" class="social-icon">
+                        <a href="adminLogin.html" class="social-icon">
                             <i class="fa-solid fa-user-tie"></i>
                         </a>
                     </div>
@@ -73,7 +73,9 @@
         <div class="panels-container">
             <div class="panel left-panel">
                 <div class="content">
+
                     <h3>New here ? Sign Up Now</h3>
+                    <img src="img/secureVOICE.png" alt="" class="logo">
                    <button class="btn transparent " id="sign-up-btn">Sign Up</button>
 
                 </div>
@@ -88,6 +90,7 @@
                         Login Securely
 
                     </p>
+                    <img src="img/secureVOICE.png" alt="" class="logo">
                     <button class="btn transparent" id="sign-in-btn">Sign In</button>
 
                 </div>
@@ -100,6 +103,35 @@
 
     <script src="Scripts/app.js">
 
+    </script>
+
+    <script>
+        document.querySelector(".sign-in-form").addEventListener("submit", function (e) {
+            if (!validateLoginForm()) e.preventDefault();
+        });
+        function validateLoginForm() {
+            const username = document.getElementById("login-username").value;
+            const password = document.getElementById("login-password").value;
+            const nameError = document.getElementById("name-error-sign-in");
+            const passwordError = document.getElementById("password-error-sign-in");
+
+            let isValid = true;
+
+            nameError.innerHTML = "";
+            passwordError.innerHTML = "";
+
+            if (username.trim() === "") {
+                nameError.innerHTML = "Username is required!";
+                isValid = false;
+            }
+
+            if (password.trim() === "") {
+                passwordError.innerHTML = "Password is required!";
+                isValid = false;
+            }
+
+            return isValid;
+        }
     </script>
 <script >
     document.querySelector(".sign-up-form").addEventListener("submit", function (e) {
