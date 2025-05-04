@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="CSS/adminLogin.css">
     <link rel="stylesheet" href="CSS/FormValidationSignUp.css">
+    <link rel="stylesheet" href="CSS/OTP.css">
 </head>
 <body>
 <div class="container">
@@ -47,7 +48,17 @@
                 </div>
 
                 <input type="submit" value="Login" class="btn solid">
+                <!-- OTP Option-->
+                <div class="input-field" id="otp-container" style="display: none;">
+                <i class="fas fa-key" id="key-logo-2"></i>
+                <input type="text" placeholder="Enter OTP" id="otp-input-2">
+                <span id="otp-error"></span>
+                </div>
 
+        <input type="button" value="Verify OTP" class="btn solid" id="verify-otp-btn" style="display: none;">
+
+
+                <!-- OTP Option Ends-->
                 <div class="social-media">
                     <a href="login.html" class="social-icon">
                         <i class="fa-solid fa-user"></i>
@@ -69,65 +80,8 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="Scripts/adminLogin.js"></script>
 
-<script >
-    document.addEventListener("DOMContentLoaded", () => {
-        const form = document.querySelector(".sign-in-form");
-        const username = form.querySelector("input[type='text']");
-        const email = form.querySelector("input[type='email']");
-        const password = form.querySelector("input[type='password']");
-        const district = form.querySelector(".district-select");
-
-        const nameError = document.getElementById("name-error-admin");
-        const emailError = document.getElementById("email-error-admin");
-        const passwordError = document.getElementById("password-error-admin");
-
-        form.addEventListener("submit", (e) => {
-            e.preventDefault(); // prevent actual submission
-
-            let valid = true;
-
-            // Username Validation
-            if (username.value.trim() === "") {
-                nameError.textContent = "Username is required.";
-                nameError.style.color = "red";
-                valid = false;
-            } else {
-                nameError.textContent = "";
-            }
-
-            // Email Validation
-            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-            if (!emailPattern.test(email.value)) {
-                emailError.textContent = "Enter a valid email.";
-                emailError.style.color = "red";
-                valid = false;
-            } else {
-                emailError.textContent = "";
-            }
-
-            // Password Validation
-            if (password.value.length < 6) {
-                passwordError.textContent = "Password must be at least 6 characters.";
-                passwordError.style.color = "red";
-                valid = false;
-            } else {
-                passwordError.textContent = "";
-            }
-
-            // District Validation
-            if (!district.value) {
-                alert("Please select a district.");
-                valid = false;
-            }
-
-            if (valid) {
-                // If all fields are valid, you can submit or handle login logic here
-                alert("Login successful (This is just a demo validation)!");
-                form.submit(); // or handle with AJAX
-            }
-        });
-    });
-</script>
 </body>
 </html>

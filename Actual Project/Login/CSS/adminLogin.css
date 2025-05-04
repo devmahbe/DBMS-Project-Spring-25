@@ -257,13 +257,18 @@ form {
     }
     .panels-container .content{
         transform: translate(55%,-90%);
-        font-size: larger;
+        font-size: smaller;
 
 
     }
     .sign-in-form .title{
         opacity: 0;
     }
+    .social-icon:hover {
+        color:#212A31 ;
+        border-color: #212A31;
+    }
+
 
 }
 
@@ -285,13 +290,18 @@ form {
     }
     .panels-container .content{
         transform: translate(50%,-80%);
-        font-size: larger;
+        font-size: small;
 
 
     }
     .sign-in-form .title{
         opacity: 0;
     }
+    .social-icon:hover {
+        color:#212A31 ;
+        border-color: #212A31;
+    }
+
 
 }
 @media (max-width: 480px) {
@@ -319,6 +329,11 @@ form {
     .sign-in-form .title{
         opacity: 0;
     }
+    .social-icon:hover {
+        color:#212A31 ;
+        border-color: #212A31;
+    }
+
 
 }
 

@@ -2,20 +2,47 @@
 #otp-container {
     width: 100%;
     margin-top: 15px;
-    padding: 0;
+    padding: 0.8rem 1rem; /* Add padding to contain children properly */
     background-color: #ffffffaa;
     border-radius: 49px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
     align-items: center;
     gap: 10px;
     transition: all 0.3s ease;
-    display: flex; /* Changed from 'none' to 'flex' */
-
+    box-sizing: border-box;
+    position:  relative;
 
 }
 #key-logo{
     font-size: 20px;
-    padding: 0 .10rem;
+    padding:0 1.5rem;
+
+
+}
+#key-logo-2{
+    position: absolute;
+    font-size: 20px;
+    padding-left: 1.5rem;
+    left: 0;
+    bottom: 0.5px;
+
+
+}
+#otp-input-2{
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+
+
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+
+    text-align: center;
+    background-color: transparent;
 }
 #otp-input{
     font-size: 20px;
