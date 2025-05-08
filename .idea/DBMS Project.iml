@@ -10,5 +10,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="@emailjs/browser" level="application" />
     <orderEntry type="library" name="e691ac3e48" level="application" />
+    <orderEntry type="library" name="tailwindcss" level="application" />
+    <orderEntry type="library" name="leaflet" level="application" />
   </component>
 </module>
