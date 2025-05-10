@@ -1,0 +1,39 @@
+{
+  "name": "git",
+  "version": "1.0.0",
+  "description": "An intelligent **Crime & Complaint Reporting System** developed as part of our **Database Management Systems (DBMS)** course project for Spring 2025.  This system allows users to report crimes, track complaint statuses, and assists authorities in maintaining structured and accessible crime records.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devmahbe/DBMS-Project-Spring-25.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/devmahbe/DBMS-Project-Spring-25/issues"
+  },
+  "homepage": "https://github.com/devmahbe/DBMS-Project-Spring-25#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.14.1",
+    "nodemailer": "^7.0.3",
+    "nodemon": "^3.1.10",
+    "tailwind": "^4.0.0",
+    "vite": "^6.3.5"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.6"
+  }
+}
