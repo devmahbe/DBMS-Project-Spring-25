@@ -1,0 +1,81 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* Modal Card */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.modal-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.modal-card h2 {
+    margin-bottom: 20px;
+    color: var(--dark-blue);
+}
+
+.modal-card label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--slate-gray);
+}
+
+.modal-card input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    border: 1px solid var(--muted-blue);
+    border-radius: 6px;
+    background-color: var(--light-grey);
+    color: var(--dark-blue);
+}
+
+.modal-card input:focus {
+    border-color: var(--deep-teal);
+    background-color: #f8f9fa;
+    outline: none;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.primary-btn, .secondary-btn {
+    flex: 1;
+    padding: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.primary-btn {
+    background-color: var(--deep-teal);
+    color: white;
+}
+
+.primary-btn:hover {
+    background-color: var(--dark-blue);
+}
+
+.secondary-btn {
+    background-color: var(--muted-blue);
+    color: white;
+}
+
+.secondary-btn:hover {
+    background-color: var(--slate-gray);
+}

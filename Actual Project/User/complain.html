@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Complaint Form</title>
+    <link rel="stylesheet" href="CSS/complainForm.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="Scripts/creds/config.js"></script>
+    <script src="Scripts/complainForm.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <h2>Submit a Complaint</h2>
+    <p class="subtitle">Please provide details about the incident you wish to report.</p>
+
+    <form>
+        <label for="complaintType">Complaint Type</label>
+        <select id="complaintType" required>
+            <option value="" disabled selected>Select complaint type</option>
+            <option value="Theft">Theft</option>
+            <option value="Harassment">Harassment</option>
+            <option value="Threat">Threat</option>
+            <option value="Assault">Assault</option>
+            <option value="Fraud">Fraud</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Please describe the incident in detail" required></textarea>
+
+        <label for="location">Location</label>
+        <div class="location-section">
+            <input type="text" id="location" placeholder="Enter address or location details" required />
+            <button type="button" class="map-btn">📍 Use Map</button>
+        </div>
+        <div class="map-placeholder">Map will be displayed here</div>
+
+        <label>Evidence</label>
+        <div class="evidence-upload">
+            <div class="upload-box">
+                <input type="file" accept="image/*" hidden id="imageUpload" />
+                <label for="imageUpload">
+                    <img src="https://img.icons8.com/ios/50/image--v1.png"/>
+                    <span>Upload Images<br><small>JPG, PNG, GIF</small></span>
+                </label>
+            </div>
+
+            <div class="upload-box">
+                <input type="file" accept="video/*" hidden id="videoUpload" />
+                <label for="videoUpload">
+                    <img src="https://img.icons8.com/ios/50/video-file.png"/>
+                    <span>Upload Videos<br><small>MP4, MOV, AVI</small></span>
+                </label>
+            </div>
+
+            <div class="upload-box">
+                <input type="file" accept="audio/*" hidden id="audioUpload" />
+                <label for="audioUpload">
+                    <img src="https://img.icons8.com/ios/50/audio-file.png"/>
+                    <span>Upload Audio<br><small>MP3, WAV, OGG</small></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-buttons">
+            <button type="button" onclick="location.href='profile.html'" class="cancel-btn">Cancel</button>
+            <button type="submit" class="submit-btn">Submit Complaint</button>
+        </div>
+    </form>
+    <!-- Success Modal -->
+    <div id="successModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>✅ Complaint Submitted!</h3>
+            <p>Your complaint has been successfully submitted. We will take action shortly.</p>
+            <button id="closeModalBtn">Close</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
