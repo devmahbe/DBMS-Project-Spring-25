@@ -1,3 +1,4 @@
+// image slider
 let items = document.querySelectorAll('.slider .list .item');
 let thumbnails = document.querySelectorAll('.thumbnail .item');
 let next = document.querySelector('#next');

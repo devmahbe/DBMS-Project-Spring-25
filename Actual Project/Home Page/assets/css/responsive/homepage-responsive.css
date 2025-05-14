@@ -1,7 +1,10 @@
-@media (max-width: 1536px) {
+@media (max-width: 1400px) {
+    .slider{
+        height: 85vh;
+    }
     .slider .list .item .content{
         left: 10%;
-        top: 5%;
+        top: 10%;
         width: 800px;
         max-width: 80%;
     }
@@ -31,22 +34,40 @@
         width: 140px;
         height: 200px;
     }
-    .explore-us-btn{
-        font-size: 22px;
-    }
 }
+
 @media (max-width: 1280px) {
+    .slider{
+        height: 90vh;
+    }
     .slider .list .item .content{
         left: 10%;
-        top: 5%;
-        width: 750px;
-        max-width: 80%;
+        top: 10%;
     }
     .slider .list .item .content h3{
         font-size: 70px;
     }
+}
+
+@media (max-width: 1024px) {
+    .slider{
+        height: 100vh;
+    }
+    .slider .list .item .content{
+        left: 10%;
+        top: 10%;
+        width: 700px;
+        max-width: 80%;
+    }
+    .slider .list .item .content h3{
+        font-size: 60px;
+    }
     .slider .list .item .content p{
-        font-size: 15px;
+        font-size: 18px;
+    }
+    .slider-arrow{
+        top: 15%;
+        right: 60px;
     }
     .slider-arrow button{
         width: 50px;
@@ -55,62 +76,27 @@
     }
     .thumbnail{
         gap: 12px;
-        bottom: -10px;
+        bottom: 30px;
         width: 100%;
-        height: 200px;
+        height: 250px;
         padding: 0 50px;
     }
     .thumbnail .item{
-        width: 110px;
-        height: 150px;
-    }
-    .thumbnail .item .content{
-        font-size: 16px;
-    }
-    .explore-us-btn{
-        font-size: 20px;
+        width: 140px;
+        height: 200px;
     }
 }
-@media (max-width: 900px) {
+
+@media (max-width: 992px) {
     .slider{
-        height: 90vh;
+        height: 95vh;
     }
-    .slider .list .item .content{
-        width: 550px;
-    }
-    .slider .list .item .content h3{
-        font-size: 60px;
-    }
-    .slider .list .item .content p{
-        font-size: 14px;
-    }
-    .slider-arrow button{
-        top: 20%;
-        width: 45px;
-        height: 45px;
-        font-size: large;
-    }
-    .thumbnail{
-        gap: 12px;
-        bottom: 0px;
-        width: 100%;
-        height: 200px;
-        padding: 0 50px;
-    }
-    .thumbnail .item{
-        width: 110px;
-        height: 150px;
-    }
-    .thumbnail .item .content{
-        font-size: 14px;
-    }
-    .explore-us-btn{
-        font-size: 15px;
-    }
+
 }
+
 @media (max-width: 768px) {
     .slider{
-        height: 80vh;
+        height: 85vh;
     }
     .slider .list .item .content{
         width: 450px;
@@ -143,76 +129,31 @@
     }
     .explore-us-btn{
         font-size: 13px;
-    } 
-}
-@media (max-width: 640px) {
-    .slider{
-        height: 70vh;
     }
-    .slider .list .item .content{
-        width: 350px;
+    #how-it-works .container .card-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
     }
-    .slider .list .item .content h3{
-        font-size: 45px;
-    }
-    .slider .list .item .content p{
-        font-size: 11px;
-    }
-    .slider-arrow button{
-        top: 10%;
-        width: 35px;
-        height: 35px;
-    }
-    .thumbnail{
-        gap: 8px;
-        bottom: -30px;
-        width: 100%;
-        height: 180px;
-        padding: 0 50px;
-    }
-    .thumbnail .item{
-        width: 80px;
-        height: 110px;
-    } 
-    .thumbnail .item .content{
-        font-size: 10px;
-    }
-    .explore-us-btn{
-        font-size: 11px;
+
+    #how-it-works .container .card-container .card {
+        width: 90%;
     }
 }
-@media (max-width: 560px) {
+
+@media (max-width: 576px) {
     .slider{
-        height: 70vh;
-    }
-    .slider .list .item .content{
-        width: 300px;
-    }
-    .slider .list .item .content h3{
-        font-size: 40px;
-    }
-    .slider .list .item .content p{
-        font-size: 10px;
+        height: 90vh;
     }
     .slider-arrow{
-        top: 10%;
+        top: 5%;
         right: 30px;
     }
-    .thumbnail{
-        gap: 8px;
-        bottom: -30px;
-        width: 100%;
-        height: 180px;
-        padding: 0 50px;
+    #ready-to-get-started .rtgs-area .buttons{
+        flex-direction: column;
     }
-    .thumbnail .item{
-        width: 80px;
-        height: 120px;
-    }
-    .thumbnail .item .content{
-        font-size: 10px;
-    }
-    .explore-us-btn{
-        font-size: 9px;
-    }
+}
+
+@media (max-width: 480px) {
+
 }

@@ -1,13 +1,8 @@
-/* start: header section */
-header .nav-links .homepage-active{
-    background-color: var(--light-grey-green);
-    color: var(--dark-slate-gray);
-}
-/* end: header section */
+/* start: header
+    header codes on assets/css/base/header-base.css
+end: header  */
 
-
-
-/* start: image slider section */
+/* start: Image Slider */
 .slider{
     height: 100vh;
     position: relative;
@@ -97,7 +92,7 @@ header .nav-links .homepage-active{
 }
 .thumbnail{
     position: absolute;
-    display: flex; 
+    display: flex;
     gap: 8px;
     bottom: 10px;
     z-index: 11;
@@ -132,15 +127,14 @@ header .nav-links .homepage-active{
     inset: auto 10px 10px 10px;
     color: var(--white-color);
 }
-/* end: image slider section */
+/* end: Image Slider */
 
-
-/* start: explore us section */
+/* start: explore us */
 .explore-us{
     width: 100%;
     height: 70vh;
     position: relative;
-    display: flex; 
+    display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -176,9 +170,172 @@ header .nav-links .homepage-active{
     border: 1px solid transparent;
     box-shadow: 0 8px 16px rgba(0, 0, 1);
 }
-/* end: explore us section */
+/* end: explore us */
 
+/* start: how it works */
+#how-it-works{
+    width: 90%;
+    margin: 5% auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.20);
+}
+#how-it-works .container{
+    padding: 30px;
+}
+#how-it-works .container .title{
+    text-align: center;
+    font-size: clamp(1.75rem, 4vw, 5rem);
+    color: var(--dark-charcoal-blue);
+    margin: 0 0 10px 0;
+    transition: all .5s ease-in-out;
+    font-family: "Montserrat", sans-serif;
+}
+#how-it-works .container .para{
+    text-align: center;
+    font-size: clamp(.75rem, 3vw, 1.25rem);
+    color: var(--deep-teal-blue);
+    margin: 0 0 40px 0;
+    transition: all .5s ease-in-out;
+    font-family: "Poppins", sans-serif;
+}
+#how-it-works .container .title:hover {
+    transform: scale(1.05);
+}
 
-/* start: footer section
-    footer codes on assets/css/base/footer-base.css
-end: footer section */
+#how-it-works .container .para:hover {
+    transform: scale(1.05);
+}
+
+#how-it-works .container .card-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+#how-it-works .container .card-container .card{
+    width: 30%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0 0 25px 0;
+    transition: all 0.3s ease-in;
+}
+#how-it-works .container .card-container .card:hover{
+    background-color: rgba(46, 57, 68, 0.9);
+    box-shadow: 0 4px 20px var(--light-grey-green);
+    transform: scale(1.05);
+}
+#how-it-works .container .card-container .card:hover a{
+    color: var(--white-color);
+}
+#how-it-works .container .card-container .card:hover p{
+    color: var(--light-grey-green);
+}
+#how-it-works .container .card-container .card .icon-circle{
+    width: 40px;
+    height: 40px;
+    border: 1px solid transparent;
+    background-color: var(--light-grey-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .5s ease-in-out;
+}
+#how-it-works .container .card-container .card i{
+    font-size: 20px;
+    color: var(--dark-charcoal-blue);
+    transition: all .5s ease-in-out;
+}
+#how-it-works .container .card-container .card .icon-circle:hover{
+    background-color: var(--dark-charcoal-blue);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+#how-it-works .container .card-container .card .icon-circle:hover i{
+    color: var(--light-grey-green);
+}
+#how-it-works .container .card-container .card a{
+    font-size: 17px;
+    color: var(--dark-slate-gray);
+    font-weight: bold;
+}
+#how-it-works .container .card-container .card a:hover{
+    text-decoration: underline;
+}
+#how-it-works .container .card-container .card p{
+    font-size: 15px;
+    text-align: justify;
+    color: var(--dark-slate-gray);
+}
+/* end: how it works */
+
+/* start: ready to get started */
+#ready-to-get-started{
+    padding: 20px;
+    background-color: var(--dark-charcoal-blue);
+}
+#ready-to-get-started .container{
+    width: 95%;
+}
+#ready-to-get-started .rtgs-area{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 10px;
+    width: 100%;
+    margin: 5% auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.20);
+    background-color: var(--deep-teal-blue);
+}
+#ready-to-get-started .rtgs-area .title{
+    text-align: center;
+    font-size: clamp(1.75rem, 4vw, 5rem);
+    color: var(--light-grey-green);
+    margin: 0 0 10px 0;
+    transition: all .5s ease-in-out;
+    font-family: "Montserrat", sans-serif;
+}
+#ready-to-get-started .rtgs-area .para{
+    text-align: center;
+    font-size: clamp(.75rem, 3vw, 1.25rem);
+    color: var(--white-color);
+    margin: 0 0 35px 0;
+    transition: all .5s ease-in-out;
+    font-family: "Poppins", sans-serif;
+    font-weight: 200;
+}
+#ready-to-get-started .rtgs-area .title:hover {
+    transform: scale(1.05);
+}
+#ready-to-get-started .rtgs-area .para:hover {
+    transform: scale(1.05);
+}
+#ready-to-get-started .rtgs-area .buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+#ready-to-get-started .rtgs-area .buttons .btn{
+    padding: 8px 14px;
+    background-color: var(--dark-charcoal-blue);
+    color: var(--light-grey-green);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .6s ease-in-out;
+}
+#ready-to-get-started .rtgs-area .buttons .btn:hover{
+    background-color: var(--light-grey-green);
+    color: var(--dark-charcoal-blue);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
+}
+/* end: ready to get started */

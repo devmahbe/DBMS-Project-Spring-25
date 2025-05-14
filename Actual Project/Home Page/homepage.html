@@ -3,43 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Voice</title>
-    <script src="https://kit.fontawesome.com/e691ac3e48.js" crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon" href="assets/images/secureVOICE-logo.png">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="stylesheet" href="assets/css/base/base.css">
-    <link rel="stylesheet" href="assets/css/base/header-base.css">
-    <link rel="stylesheet" href="assets/css/base/footer-base.css">
+    <link rel="stylesheet" href="assets/css/base/header.css">
+    <link rel="stylesheet" href="assets/css/base/footer.css">
     <link rel="stylesheet" href="assets/css/style/homepage-style.css">
     <link rel="stylesheet" href="assets/css/responsive/homepage-responsive.css">
 </head>
 <body>
     
-<!-- start: header section -->
+<!-- Start: Header -->
     <header>
-        <div class="logo">
-            <img src="assets/images/secureVOICE-logo.png" alt="secureVOICE-logo">
-        </div>
-        <ul class="nav-links">
-            <li><a href="homepage.html" class="homepage-active">Home</a></li>
-            <li><a href="#" target="_blank">Services</a></li>
-            <li><a href="#" target="_blank">Cases</a></li>
-            <li><a href="#" target="_blank">About Us</a></li>
-            <li><a href="contactus.html">Contact Us</a></li>
-        </ul>
-        <div class="icons">
-            <a href="../Login/login.html">
-                <i class="fa-solid fa-user"></i>
-                <span>User</span>
-            </a>
-            <a href="../Login/adminLogin.html">
-                <i class="fa-solid fa-user-tie"></i>
-                <span>Admin</span>
-            </a>
+        <div class="container">
+            <div class="header-contents">
+                <div class="logo">
+                    <a href="homepage.html">
+                        <img src="assets/images/secureVOICE-logo.png" class="floating-logo" alt="secureVOICE-logo">
+                    </a>
+                </div>
+                <div class="navigation">
+                    <ul class="navigation-menu">
+                        <button id="menu-close-btn" class="fas fa-times"></button>
+                        <li class="navigation-item navigation-active">
+                            <a href="#" class="navigation-link navigation-link-active">Home</a>
+                        </li>
+                        <li class="navigation-item">
+                            <a href="#how-it-works" class="navigation-link">Services</a>
+                        </li>
+                        <li class="navigation-item">
+                            <a href="#" class="navigation-link" onclick="window.alert('Not Done Yet')">Cases</a>
+                        </li>
+                        <li class="navigation-item">
+                            <a href="#ready-to-get-started" class="navigation-link">About Us</a>
+                        </li>
+                        <li class="navigation-item">
+                            <a href="contact-us.html" class="navigation-link">Contact Us</a>
+                        </li>
+                        <li class="navigation-item nav-user-admin">
+                            <a href="#" class="navigation-link">User</a>
+                        </li>
+                        <li class="navigation-item nav-user-admin">
+                            <a href="#" class="navigation-link">Admin</a>
+                        </li>
+                    </ul>
+                    <button id="menu-open-btn" class="fas fa-bars"></button>
+                </div>
+                <div class="header-icons">
+                    <a href="#" class="icon-items user">
+                        <div class="icon-border">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <span>User</span>
+                    </a>
+                    <a href="#" class="icon-items admin">
+                        <div class="icon-border">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <span>Admin</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
-<!-- end: header section -->
+<!-- End: Header -->
 
-<!-- start: imageslider section -->
+<!-- Start: Image Slider -->
     <div class="slider">
         <div class="list">
             <div class="item active">
@@ -115,47 +145,149 @@
             </div>
         </div>
     </div>
-<!-- end: image slider section -->
+<!-- End: Image Slider -->
 
+<!-- Start: How it works -->
+<section id="how-it-works">
+    <div class="container">
+        <h1 class="title">How It Works</h1>
+        <p class="para">Our platform makes it easy to report crimes and track their investigation progress.</p>
+        <div class="card-container">
+            <div class="card">
+                <div class="icon-circle">
+                    <i class="fa-regular fa-circle-user"></i>
+                </div>
+                <a href="#">Create an Account</a>
+                <p>Sign up with your personal details to create a secure account for reporting crimes.
+                </p>
+            </div>
+            <div class="card">
+                <div class="icon-circle">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <a href="#">Submit a Complaint</a>
+                <p>Provide details about the incident, including location, time, and any evidence you may have.
+                </p>
+            </div>
+            <div class="card">
+                <div class="icon-circle">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </div>
+                <a href="#">Track Project</a>
+                <p>Monitor the status of your complaint as it moves through verification, investigation, and resolution.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End: How it works -->
 
-<!-- start: explore us section -->
+<!-- Start: Explore Us -->
     <div class="explore-us">
         <video autoplay muted loop playsinline class="explore-us-video">
-            <source src="assets/videos/explore_us.mp4" type="video/mp4">
+            <source src="assets/videos/explore-us.mp4" type="video/mp4">
             If the video is not showing, then it might be because your browser is outdated. please update it to view this video.
         </video>
         <div class="explore-us-content">
-            <a href="#" class="explore-us-btn" target="_blank">Explore Us</a>
+            <a href="#" class="explore-us-btn">Explore Us</a>
         </div>
     </div>
-<!-- end: explore us section -->
+<!-- End: Explore Us -->
 
-
-<!-- start: footer section -->
-<footer>
-    <div class="footer-container">
-        <div class="socialmedia-icons">
-            <a href="https://web.facebook.com/?_rdc=1&_rdr#" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://x.com/" target="_blank"><i class="fa-brands fa-square-x-twitter"></i></a>
-            <a href="https://www.linkedin.com/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="https://www.google.com/" target="_blank"><i class="fa-brands fa-google"></i></a>
-            <a href="https://www.youtube.com/" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+<!-- Start: Ready to get started -->
+    <section id="ready-to-get-started">
+        <div class="container">
+            <div class="rtgs-area">
+                <h1 class="title">Ready to Get Started?</h1>
+                <p class="para">Join our platform today to report incidents to help make you community safer.</p>
+                <div class="buttons">
+                    <a href="#" class="btn">Create an account</a>
+                    <a href="#" class="btn">Login to your account</a>
+                </div>
+            </div>
         </div>
-        <ul class="footer-nav">
-            <li><a href="homepage.html">Home</a></li>
-            <li><a href="#" target="_blank">Services</a></li>
-            <li><a href="#" target="_blank">Cases</a></li>
-            <li><a href="#" target="_blank">About Us</a></li>
-            <li><a href="contactus.html" target="_blank">Contact Us</a></li>
-        </ul>
-    </div>
-    <div class="footer-copyright">
-        <p>Copyright &copy;2025; <span class="designer-name">secureVOICE</span></p>
-    </div>
-</footer>
-<!-- end: footer section -->
+    </section>
+<!-- End: Ready to get started -->
+
+<!-- Start: Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-main">
+                    <div class="footer-logo">
+                        <img src="assets/images/secureVOICE-logo.png" alt="secureVOICE-logo" class="floating-logo">
+                        <p class="footer-title">SECURE VOICE</p>
+                    </div>
+                    <div class="footer-links">
+                        <h4>LINKS</h4>
+                        <ul class="footer-nav">
+                            <li class="footer-nav-items
+                            active"><a href="#" class="footer-nav-links active">Home</a></li>
+                            <li class="footer-nav-items"><a href="#how-it-works" class="footer-nav-links">Services</a></li>
+                            <li class="footer-nav-items"><a href="#" class="footer-nav-links"  onclick="window.alert('Not Done Yet')">Cases</a></li>
+                            <li class="footer-nav-items"><a href="#ready-to-get-started" class="footer-nav-links">About Us</a></li>
+                            <li class="footer-nav-items"><a href="contact-us.html" class="footer-nav-links">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-contact">
+                        <h4>CONTACT</h4>
+                        <ul class="footer-contact-info">
+                            <div class="contact">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <li>Dhaka, Bangladesh</li>
+                            </div>
+                            <div class="contact">
+                                <i class="fas fa-envelope"></i>
+                                <li>info@securevoice.com</li>
+                            </div>
+                            <div class="contact">
+                                <i class="fas fa-phone-alt"></i> 
+                                <li>+880-123-456-7890</li>
+                            </div>
+                            <div class="contact">
+                                <i class="fas fa-clock"></i>
+                                <li></i> Open 24/7</li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-meta">
+                    <div class="footer-copy">
+                        <div class="copyright-title">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Crime Reporting System</span>
+                        </div>
+                        <div class="copyright-text">
+                            <span>
+                                &copy; 2025, Secure Voice - Crime Reporting System. All rights reserved.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="footer-social">
+                        <div class="social-area">
+                            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                        <div class="social-area">
+                            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                        <div class="social-area">
+                            <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+                        </div>
+                        <div class="social-area">
+                            <a href="mailto: info@securevoice.com"><i class="fas fa-envelope"></i></a>
+                        </div>
+                        <div class="social-area">
+                            <a href="https://github.com/devmahbe/DBMS-Project-Spring-25" target="_blank"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+<!-- End: Footer --> 
+
 
     <script src="assets/js/homepage.js"></script>
-    
+    <script src="assets/js/base/header.js"></script>
 </body>
 </html>
