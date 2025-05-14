@@ -1,0 +1,71 @@
+@media (max-width: 1400px) {
+    #profile .profile-container  .form-content  .form-content-container{
+        gap: 65px;
+    }
+}
+
+@media (max-width: 1280px) {
+    #profile .profile-container  .form-content  .form-content-container{
+        gap: 85px;
+    }
+}
+
+@media (max-width: 1024px) {
+    #reports .reports-container .complaint-area .complaint-table button, #reports .reports-container .modal-content button{
+        padding: 6px 10px;
+        font-size: var(--font-md);
+        margin: 3px;
+    }
+    #profile .profile-container  .form-content  .form-content-container{
+        gap: 80px;
+    }
+}
+
+@media (max-width: 992px) {
+    #profile .profile-container  .form-content  .form-content-container{
+        gap: 65px;
+    }
+}
+
+@media (max-width: 768px) {
+    #reports .reports-container .complaint-area{
+        width: 100%;
+    }
+    #reports .reports-container .complaint-area .complaint-table th,
+    #reports .reports-container .complaint-area .complaint-table td{
+        padding: 5px;
+        font-size: 12px;
+    } 
+    #reports .reports-container .complaint-area .complaint-table button, #reports .reports-container .modal-content button{
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+    }
+    #statistics .statistics-container .complaint-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }  
+    .admin-page .side-panel-container .side-panel .buttons .btn-organize{
+        border: 1px solid rgba(161, 159, 159, 0.78);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .admin-page .side-panel-container .side-panel .buttons .btn-organize i,
+   .admin-page .side-panel-container .side-panel .buttons .btn-organize span {
+        font-size: 10px;
+    }
+    #profile .profile-container  .form-content  .form-content-container{
+        gap: 50px;
+    }
+}
+
+@media (max-width: 576px) {
+    #profile .profile-container  .form-content  .form-content-container{
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+
+}
