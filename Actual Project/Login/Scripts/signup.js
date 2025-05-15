@@ -148,7 +148,34 @@ document.getElementById("verify-otp-btn").addEventListener("click", function () 
 
     if (enteredOTP === generatedOTP) {
         otpError.innerHTML = "✅ OTP verified. You can now register.";
-        // Optionally: Submit the form or enable registration
+
+        //Get Form DAta
+        const username = document.getElementById("signup-username").value;
+        const email = document.getElementById("contact-email").value;
+        const password = document.getElementById("signup-password").value;
+
+     // Create AJAX request
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/signup", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        //Prepare DAta
+
+        const data = `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    otpError.innerHTML = "✅ Registration successful!";
+                    // Optionally redirect user to login
+                    setTimeout(() => {
+                        document.getElementById("sign-in-btn").click();
+                    }, 2000);
+                } else {
+                    otpError.innerHTML = "❌ Registration failed: " + xhr.responseText;
+                }
+            }
+        };
+
+        xhr.send(data);
     } else {
         otpError.innerHTML = "❌ Incorrect OTP. Try again.";
     }
