@@ -13,26 +13,27 @@
     <div class="container">
         <div class="forms-container">
             <div class="signin-signup">
-                <!----------------------Sign in Form---------------------------------------------------------------------------->
-                <form action="" class="sign-in-form" onsubmit="return validateLoginForm()">
-                    <h2 class="title">Sign In</h2>
-                    <div class="input-field">
-                        <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Username" id="login-username" onkeyup="validateName()">
-                        <span id="name-error-sign-in"></span>
-                    </div>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Password" id="login-password">
-                        <span id="password-error-sign-in"></span>
-                    </div>
-                    <input type="submit" value="Login" class="btn solid">
-                    <div class="social-media">
-                        <a href="adminLogin.html" class="social-icon">
-                            <i class="fa-solid fa-user-tie"></i>
-                        </a>
-                    </div>
-                </form>
+                <!-- Update your sign-in form to use the login endpoint -->
+<form action="/login" method="post" class="sign-in-form" id="loginForm">
+    <h2 class="title">Sign In</h2>
+    <div class="input-field">
+        <i class="fas fa-user"></i>
+        <input type="text" name="username" placeholder="Username" id="login-username" onkeyup="validateLoginUsername()">
+        <span id="name-error-sign-in"></span>
+    </div>
+    <div class="input-field">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="password" placeholder="Password" id="login-password" onkeyup="validateLoginPassword()"
+        >
+        <span id="password-error-sign-in"></span>
+    </div>
+    <input type="submit" value="Login" class="btn solid">
+    <div class="social-media">
+        <a href="adminLogin.html" class="social-icon">
+            <i class="fa-solid fa-user-tie"></i>
+        </a>
+    </div>
+</form>
                 <!----------------------Sign up Form---------------------------------------------------------------------------->
                 <form action="" class="sign-up-form" >
                     <h2 class="title">Sign Up</h2>
@@ -118,9 +119,64 @@
     <script src="Scripts/signup.js"></script>
 
     <script>
-        document.querySelector(".sign-in-form").addEventListener("submit", function (e) {
-            if (!validateLoginForm()) e.preventDefault();
+        document.addEventListener("DOMContentLoaded", function() {
+            const loginForm = document.getElementById("loginForm");
+
+            loginForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                // First validate the form
+                if (!validateLoginForm()) {
+                    return; // Stop if validation fails
+                }
+
+                // If validation passes, proceed with AJAX submission
+                const username = document.getElementById("login-username").value;
+                const password = document.getElementById("login-password").value;
+
+                // Create AJAX request
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/login", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                // Prepare data
+                const data = JSON.stringify({
+                    username: username,
+                    password: password
+                });
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        const passwordErrorElement = document.getElementById("password-error-sign-in");
+
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.success) {
+                                    // Redirect to profile page
+                                    window.location.href = response.redirect;
+                                } else {
+                                    passwordErrorElement.innerHTML = response.message;
+                                }
+                            } catch (e) {
+                                passwordErrorElement.innerHTML = "An error occurred while processing the response";
+                            }
+                        } else {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                passwordErrorElement.innerHTML = response.message;
+                            } catch (e) {
+                                passwordErrorElement.innerHTML = "Login failed. Please try again.";
+                            }
+                        }
+                    }
+                };
+
+                xhr.send(data);
+            });
         });
+
+        // Keep your validateLoginForm function as is
         function validateLoginForm() {
             const username = document.getElementById("login-username").value;
             const password = document.getElementById("login-password").value;
@@ -144,6 +200,32 @@
 
             return isValid;
         }
+        function validateLoginUsername() {
+            const username = document.getElementById("login-username").value;
+            const nameError = document.getElementById("name-error-sign-in");
+
+            if (username.trim() === "") {
+                nameError.innerHTML = "Username is required!";
+                return false;
+            }
+            nameError.innerHTML = "";
+            return true;
+        }
+
+        function validateLoginPassword() {
+            const password = document.getElementById("login-password").value;
+            const passwordError = document.getElementById("password-error-sign-in");
+
+            if (password.trim() === "") {
+                passwordError.innerHTML = "Password is required!";
+                return false;
+            }
+            passwordError.innerHTML = "";
+            return true;
+        }
+
+
+
     </script>
 
 <script src="Scripts/insertJS.js"></script>

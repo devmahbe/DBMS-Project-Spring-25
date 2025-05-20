@@ -157,18 +157,31 @@ document.getElementById("verify-otp-btn").addEventListener("click", function () 
      // Create AJAX request
         const xhr = new XMLHttpRequest();
         xhr.open("POST", "/signup", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        //Prepare DAta
-
-        const data = `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+        xhr.setRequestHeader("Content-Type", "application/json");
+        //Prepare Data
+        const data = JSON.stringify({
+            username: username,
+            email: email,
+            password: password
+        });
+        
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    otpError.innerHTML = "✅ Registration successful!";
-                    // Optionally redirect user to login
-                    setTimeout(() => {
-                        document.getElementById("sign-in-btn").click();
-                    }, 2000);
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        otpError.innerHTML = "✅ " + response.message;
+                        
+                        // Redirect to profile page after successful registration
+                        setTimeout(() => {
+                            window.location.href = "/profile";
+                        }, 2000);
+                    } catch (e) {
+                        otpError.innerHTML = "✅ Registration successful!";
+                        setTimeout(() => {
+                            window.location.href = "/profile";
+                        }, 2000);
+                    }
                 } else {
                     otpError.innerHTML = "❌ Registration failed: " + xhr.responseText;
                 }
