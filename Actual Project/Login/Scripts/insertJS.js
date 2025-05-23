@@ -2,6 +2,7 @@ var express1 = require('express');
 var app = express1();
 var con = require('../../ServerConnection.js');
 require('dotenv').config();
+const fs = require('fs');
 var bodyParser = require('body-parser');
 const bcrypt = require('bcrypt'); // Add this line
 const saltRounds = 10; // Add this line - defines the complexity of the hash
@@ -17,15 +18,132 @@ console.log('Serving static files from:', parentDir);
 app.use('/User/Scripts',express1.static(path.join(__dirname, '../../User/Scripts')))
 app.use('/User/CSS', express1.static(path.join(__dirname, '../../User/CSS')));
 
-
-// Add session management
+// Make sure these imports are at the top of your file
 const session = require('express-session');
+
+// Update session middleware - make sure this is before any routes
 app.use(session({
     secret: 'your_secure_random_string_here',
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false } // set to true if using https
+    saveUninitialized: true, // Changed to true
+    cookie: { 
+        secure: false, // set to true if using https
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
 }));
+
+// Calculate correct paths
+const rootDir = path.join(parentDir, '..');
+const homePageDir = path.join(rootDir, 'Home Page');
+
+// Route to serve homepage with authentication
+app.get('/homepage', function(req, res) {
+    // Add debugging information
+    console.log("Session:", req.session);
+    
+    // Check if session and session.userId exist
+    const isAuthenticated = req.session && req.session.userId ? true : false;
+    const username = req.session && req.session.username ? req.session.username : null;
+
+    
+    // Correct path to homepage.html
+    const homepagePath = path.join(homePageDir, 'homepage.html');
+    
+    // Check if file exists
+    if (!fs.existsSync(homepagePath)) {
+        console.error("Homepage file not found:", homepagePath);
+        return res.status(404).send("Homepage file not found");
+    }
+    
+    fs.readFile(homepagePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error reading homepage file:", err);
+            return res.status(500).send("Error loading homepage");
+        }
+        
+        // Add user authentication data to be used by JavaScript
+        const authScript = `
+        <script>
+            window.isAuthenticated = ${isAuthenticated};
+            window.currentUser = ${JSON.stringify(username)};
+        </script>
+        `;
+        
+        // Insert the script right before the closing </head> tag
+        let modifiedData = data.replace('</head>', authScript + '</head>');
+       // Update all links in the HTML to use routes instead of relative paths
+        modifiedData = modifiedData.replace(/href="\.\.\/Login\/login\.html"/g, 'href="/login"');
+        modifiedData = modifiedData.replace(/href="\.\.\/Login\/adminLogin\.html"/g, 'href="/adminLogin"');
+
+
+        res.send(modifiedData);
+    });
+});
+
+// Serve static files from Home Page directory
+app.use('/Home Page', express1.static(homePageDir));
+
+// Serve static files from assets directory within Home Page
+app.use('/assets', express1.static(path.join(homePageDir, 'assets')));
+
+// Add session management
+
+// Route for the contact-us page
+app.get('/contact-us', function(req, res) {
+    // Check if user is logged in - similar to the homepage route
+    const isAuthenticated = req.session && req.session.userId ? true : false;
+    const username = req.session && req.session.username ? req.session.username : null;
+    
+    // Correct path to contact-us.html
+    const contactUsPath = path.join(homePageDir, 'contact-us.html');
+    
+    // Check if file exists
+    if (!fs.existsSync(contactUsPath)) {
+        console.error("Contact Us file not found:", contactUsPath);
+        return res.status(404).send("Contact Us page not found");
+    }
+    
+    fs.readFile(contactUsPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error reading contact-us file:", err);
+            return res.status(500).send("Error loading contact-us page");
+        }
+        
+        // Add user authentication data to be used by JavaScript
+        const authScript = `
+        <script>
+            window.isAuthenticated = ${isAuthenticated};
+            window.currentUser = ${JSON.stringify(username)};
+        </script>
+        `;
+        
+        // Insert the script right before the closing </head> tag
+        const modifiedData = data.replace('</head>', authScript + '</head>\n<link rel="stylesheet" href="assets/css/base/auth-header.css">');
+        
+        res.send(modifiedData);
+    });
+});
+
+// Route for the admin login page
+app.get('/adminLogin', function(req, res) {
+    // Path to adminLogin.html
+    const adminLoginPath = path.join(parentDir, 'adminLogin.html');
+
+    // Check if file exists
+    if (!fs.existsSync(adminLoginPath)) {
+        console.error("Admin login file not found:", adminLoginPath);
+        return res.status(404).send("Admin login page not found");
+    }
+
+    fs.readFile(adminLoginPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error reading admin login file:", err);
+            return res.status(500).send("Error loading admin login page");
+        }
+        res.send(data);
+    });
+});
+
 
 app.get('/signup',function(req,res){
     res.sendFile(path.join(parentDir,'login.html'));
@@ -112,7 +230,7 @@ app.post('/login', function(req, res) {
 
         const user = results[0];
 
-        // Compare password with hashed password in database
+        //Compare password with hashed password in database
         bcrypt.compare(password, user.password, function(err, isMatch) {
             if (err) {
                 console.error("Password comparison error:", err);
@@ -134,6 +252,9 @@ app.post('/login', function(req, res) {
             req.session.username = user.username;
             req.session.email = user.email;
 
+            console.log("Session after login:", req.session);
+
+
             // Send success response
             res.json({
                 success: true,
@@ -143,6 +264,20 @@ app.post('/login', function(req, res) {
         });
     });
 });
+
+//Helper function to calculate age from date of birth
+function calculateAge(dob) {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    return age;
+}
 
 // Add a route for the profile page
 app.get('/profile', function(req, res) {
@@ -162,8 +297,11 @@ app.get('/profile', function(req, res) {
             return res.status(404).send("User not found");
         }
         
-        // Render profile page with user data
-        res.render('profile', { user: results[0] });
+        // Render profile page with user data and pass the calculateAge function
+        res.render('profile', { 
+            user: results[0],
+            calculateAge: calculateAge 
+        });
     });
 });
 
@@ -177,21 +315,34 @@ app.post('/update-profile', function(req, res) {
 
     console.log("Update profile request received:", req.body);
     const { fullName, email, phone, location, dob } = req.body;
-
-    // Update user profile in database - with exact column names from your DB schema
-    const sql = "UPDATE users SET fullName = ?, phone = ?, dob = ?, location = ? WHERE userid = ?";
     
-    // Log the exact SQL and parameters for debugging
-    console.log("SQL:", sql);
-    console.log("Parameters:", [fullName, phone, dob, location, req.session.userId]);
 
-    con.query(sql, [fullName, phone, dob, location, req.session.userId], function(err, result) {
+    
+    // Calculate age from DOB (if needed)
+    let age = null;
+    if (dob) {
+        const birthDate = new Date(dob);
+        const today = new Date();
+        age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+    }
+    
+    // Update query with age calculation
+    const sql = "UPDATE users SET fullName = ?, phone = ?, dob = ?, location = ?, age = ? WHERE userid = ?";
+    
+    con.query(sql, [fullName, phone, dob, location, age, req.session.userId], function(err, result) {
         if (err) {
             console.error("Error updating profile:", err);
             return res.status(500).json({ success: false, message: "Error updating profile: " + err.message });
         }
 
         console.log("Update result:", result);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "No user updated - check user ID" });
+        }
         return res.json({ success: true, message: "Profile updated successfully" });
     });
 });
@@ -231,7 +382,6 @@ app.post('/logout', function(req, res) {
         res.redirect('/signup');
     });
 });
-
 
 const PORT = process.env.PORT || 3000;
 

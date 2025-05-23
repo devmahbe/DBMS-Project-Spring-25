@@ -44,7 +44,7 @@ end: header  */
     text-shadow: 0 8px 16px rgba(0, 0, 1);
 }
 .slider .list .item .content p{
-    font-size: 13px;
+    font-size: 16px;
     color: var(--light-grey-green);
 }
 .slider .list .item.active{

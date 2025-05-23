@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="assets/css/base/footer.css">
     <link rel="stylesheet" href="assets/css/style/homepage-style.css">
     <link rel="stylesheet" href="assets/css/responsive/homepage-responsive.css">
+    <link rel="stylesheet" href="assets/css/base/auth-header.css">
 </head>
 <body>
     
@@ -19,7 +20,7 @@
         <div class="container">
             <div class="header-contents">
                 <div class="logo">
-                    <a href="homepage.html">
+                    <a href="/homepage">
                         <img src="assets/images/secureVOICE-logo.png" class="floating-logo" alt="secureVOICE-logo">
                     </a>
                 </div>
@@ -39,25 +40,25 @@
                             <a href="#ready-to-get-started" class="navigation-link">About Us</a>
                         </li>
                         <li class="navigation-item">
-                            <a href="contact-us.html" class="navigation-link">Contact Us</a>
+                            <a href="/contact-us" class="navigation-link">Contact Us</a>
                         </li>
                         <li class="navigation-item nav-user-admin">
-                            <a href="#" class="navigation-link">User</a>
-                        </li>
+                            <a href="/signup" class="navigation-link">User</a>
+                  -      </li>
                         <li class="navigation-item nav-user-admin">
-                            <a href="#" class="navigation-link">Admin</a>
+                            <a href="/adminLogin" class="navigation-link">Admin</a>
                         </li>
                     </ul>
                     <button id="menu-open-btn" class="fas fa-bars"></button>
                 </div>
                 <div class="header-icons">
-                    <a href="../Login/login.html" class="icon-items user">
+                    <a href="/signup" class="icon-items user">
                         <div class="icon-border">
                             <i class="fa-solid fa-user"></i>
                         </div>
                         <span>User</span>
                     </a>
-                    <a href="../Login/adminLogin.html" class="icon-items admin">
+                    <a href="/adminLogin" class="icon-items admin">
                         <div class="icon-border">
                             <i class="fa-solid fa-user-tie"></i>
                         </div>
@@ -105,7 +106,7 @@
                 <div class="content">
                     <h3>SYLHET</h3>
                     <p>With its tea gardens and vibrant culture, Sylhet stands proud. We support Sylhet’s citizens by offering a secure platform to report incidents and receive prompt investigations.</p>
-                </div>
+                 </div>
             </div>
         </div>
         <div class="slider-arrow">
@@ -201,7 +202,7 @@
                 <h1 class="title">Ready to Get Started?</h1>
                 <p class="para">Join our platform today to report incidents to help make you community safer.</p>
                 <div class="buttons">
-                    <a href="../Login/login.html" class="btn">Create an account </a> </div>
+                    <a href="/signup" class="btn">Create an account </a> </div>
             </div>
         </div>
     </section>
@@ -224,6 +225,9 @@
                             <li class="footer-nav-items"><a href="#how-it-works" class="footer-nav-links">Services</a></li>
                             <li class="footer-nav-items"><a href="#" class="footer-nav-links"  onclick="window.alert('Not Done Yet')">Cases</a></li>
                             <li class="footer-nav-items"><a href="#ready-to-get-started" class="footer-nav-links">About Us</a></li>
+                            <li class="footer-nav-items">
+                                <a href="/contact-us" class="footer-nav-links">Contact Us</a>
+                            </li>
                             <li class="footer-nav-items"><a href="contact-us.html" class="footer-nav-links">Contact Us</a></li>
                         </ul>
                     </div>
@@ -287,5 +291,6 @@
 
     <script src="assets/js/homepage.js"></script>
     <script src="assets/js/base/header.js"></script>
+    <script src="assets/js/auth-handler.js" defer></script>
 </body>
 </html>
