@@ -7,12 +7,13 @@
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
-input[type="text"], select, textarea, .map-btn, .cancel-btn, .submit-btn, .upload-box {
+input[type="text"],input[type="datetime-local"], select, textarea, .map-btn, .cancel-btn, .submit-btn, .upload-box {
     transition: all 0.3s ease;
 }
 
 /* Focus/hover effects */
 input[type="text"]:focus,
+input[type="datetime-local"]:focus,
 select:focus,
 textarea:focus {
     border-color: #124E66;
@@ -69,7 +70,7 @@ label {
     font-weight: 600;
 }
 
-select, textarea, input[type="text"] {
+select, textarea, input[type="text"],input[type="datetime-local"] {
     width: 100%;
     padding: 12px;
     margin-top: 5px;

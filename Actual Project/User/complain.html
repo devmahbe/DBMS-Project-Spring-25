@@ -16,9 +16,9 @@
     <h2>Submit a Complaint</h2>
     <p class="subtitle">Please provide details about the incident you wish to report.</p>
 
-    <form>
+    <form enctype="multipart/form-data">
         <label for="complaintType">Complaint Type</label>
-        <select id="complaintType" required>
+        <select id="complaintType" name="complaintType" required>
             <option value="" disabled selected>Select complaint type</option>
             <option value="Theft">Theft</option>
             <option value="Harassment">Harassment</option>
@@ -29,11 +29,14 @@
         </select>
 
         <label for="description">Description</label>
-        <textarea id="description" placeholder="Please describe the incident in detail" required></textarea>
+        <textarea id="description" name="description" placeholder="Please describe the incident in detail" required></textarea>
+
+        <label for="incidentDate">Date & Time of Incident</label>
+        <input type="datetime-local" id="incidentDate" name="incidentDate" required />
 
         <label for="location">Location</label>
         <div class="location-section">
-            <input type="text" id="location" placeholder="Enter address or location details" required />
+            <input type="text" id="location" name="location" placeholder="Enter address or location details" required />
             <button type="button" class="map-btn">📍 Use Map</button>
         </div>
         <div class="map-placeholder">Map will be displayed here</div>
@@ -66,7 +69,7 @@
         </div>
 
         <div class="form-buttons">
-            <button type="button" onclick="location.href='profile.html'" class="cancel-btn">Cancel</button>
+            <button type="button" id="cancelBtn" class="cancel-btn">Cancel</button>
             <button type="submit" class="submit-btn">Submit Complaint</button>
         </div>
     </form>

@@ -7,22 +7,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="stylesheet" href="assets/css/base/base.css">
-    <link rel="stylesheet" href="assets/css/base/header.css">
+    <link rel="stylesheet" href="assets/css/base/enhanced-header.css">
     <link rel="stylesheet" href="assets/css/base/footer.css">
     <link rel="stylesheet" href="assets/css/style/homepage-style.css">
     <link rel="stylesheet" href="assets/css/responsive/homepage-responsive.css">
     <link rel="stylesheet" href="assets/css/base/auth-header.css">
 </head>
 <body>
-    
+
 <!-- Start: Header -->
     <header>
         <div class="container">
             <div class="header-contents">
                 <div class="logo">
                     <a href="/homepage">
-                        <img src="assets/images/secureVOICE-logo.png" class="floating-logo" alt="secureVOICE-logo">
-                    </a>
+                        <div class="logo-text">SecureVoice</div>
+                         <div class="logo-subtitle">Crime Reporting System</div>
+
+                </a>
                 </div>
                 <div class="navigation">
                     <ul class="navigation-menu">
@@ -34,19 +36,14 @@
                             <a href="#how-it-works" class="navigation-link">Services</a>
                         </li>
                         <li class="navigation-item">
-                            <a href="#" class="navigation-link" onclick="window.alert('Not Done Yet')">Cases</a>
+                            <a href="#cases-section" class="navigation-link">Cases</a>
                         </li>
+
                         <li class="navigation-item">
                             <a href="#ready-to-get-started" class="navigation-link">About Us</a>
                         </li>
                         <li class="navigation-item">
                             <a href="/contact-us" class="navigation-link">Contact Us</a>
-                        </li>
-                        <li class="navigation-item nav-user-admin">
-                            <a href="/signup" class="navigation-link">User</a>
-                  -      </li>
-                        <li class="navigation-item nav-user-admin">
-                            <a href="/adminLogin" class="navigation-link">Admin</a>
                         </li>
                     </ul>
                     <button id="menu-open-btn" class="fas fa-bars"></button>
@@ -182,6 +179,111 @@
     </div>
 </section>
 <!-- End: How it works -->
+<!-- Start: Cases Section -->
+<section id="cases-section">
+    <div class="container">
+        <h1 class="title">Cases We Handle</h1>
+        <p class="para">We handle a wide range of criminal complaints with utmost care and confidentiality.</p>
+
+        <div class="cases-grid">
+            <div class="case-type-card">
+                <div class="case-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3>Personal Safety</h3>
+                <p>Harassment, assault, domestic violence, stalking, and threats to personal safety. We ensure your voice is heard and action is taken promptly.</p>
+            </div>
+
+            <div class="case-type-card">
+                <div class="case-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3>Property Crimes</h3>
+                <p>Theft, burglary, vandalism, property damage, and trespassing. Report property-related incidents with detailed evidence support.</p>
+            </div>
+
+            <div class="case-type-card">
+                <div class="case-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h3>Financial Fraud</h3>
+                <p>Online scams, identity theft, credit card fraud, and financial crimes. Secure reporting with encrypted data protection.</p>
+            </div>
+
+            <div class="case-type-card">
+                <div class="case-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3>Cyber Crimes</h3>
+                <p>Online harassment, cyberbullying, hacking, data breaches, and digital threats. Specialized cyber crime investigation unit.</p>
+            </div>
+
+            <div class="case-type-card">
+                <div class="case-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h3>Traffic Violations</h3>
+                <p>Reckless driving, hit-and-run incidents, traffic accidents, and road rage. Quick response and proper documentation.</p>
+            </div>
+
+            <div class="case-type-card">
+                <div class="case-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Public Safety</h3>
+                <p>Public disturbances, noise complaints, environmental hazards, and community safety concerns. Building safer neighborhoods together.</p>
+            </div>
+        </div>
+
+        <div class="security-features">
+    <h3>How We Ensure Secure Complaints</h3>
+    <p>Your safety and privacy are our top priorities. We use advanced security measures to protect your identity and information.</p>
+    
+    <div class="security-grid">
+        <div class="security-row">
+            <div class="security-item">
+                <i class="fas fa-lock"></i>
+                <h4>End-to-End Encryption</h4>
+                <p>Military-grade security protocols</p>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-user-secret"></i>
+                <h4>Anonymous Reporting</h4>
+                <p>Complete anonymity option</p>
+            </div>
+        </div>
+        
+        <div class="security-row">
+            <div class="security-item">
+                <i class="fas fa-shield-alt"></i>
+                <h4>Secure Storage</h4>
+                <p>Protected servers with backups</p>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-eye-slash"></i>
+                <h4>Privacy Protection</h4>
+                <p>Strict confidentiality policies</p>
+            </div>
+        </div>
+        
+        <div class="security-row">
+            <div class="security-item">
+                <i class="fas fa-clock"></i>
+                <h4>24/7 Monitoring</h4>
+                <p>Round-the-clock security</p>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-certificate"></i>
+                <h4>Verified Officials</h4>
+                <p>Authenticated law enforcement</p>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</section>
+<!-- End: Cases Section -->
+
 
 <!-- Start: Explore Us -->
     <div class="explore-us">
@@ -243,7 +345,7 @@
                                 <li>info@securevoice.com</li>
                             </div>
                             <div class="contact">
-                                <i class="fas fa-phone-alt"></i> 
+                                <i class="fas fa-phone-alt"></i>
                                 <li>+880-123-456-7890</li>
                             </div>
                             <div class="contact">
@@ -286,7 +388,19 @@
             </div>
         </div>
     </footer>
-<!-- End: Footer --> 
+<!-- End: Footer -->
+
+<script>
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+</script>
+
 
 
     <script src="assets/js/homepage.js"></script>

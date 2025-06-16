@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Check if user auth container already exists to prevent duplicates
+        const existingUserAuth = headerIcons.querySelector('.user-auth-container');
+        if (existingUserAuth) {
+            console.log("User auth container already exists, skipping creation");
+            return;
+        }
+        
         // Hide the regular user/admin icons
         const userAdminIcons = headerIcons.querySelectorAll('.icon-items');
         userAdminIcons.forEach(icon => {
@@ -54,6 +61,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     } else {
         console.log("User is not authenticated");
+        
+        // Ensure user/admin icons are visible for non-authenticated users
+        const headerIcons = document.querySelector('.header-icons');
+        if (headerIcons) {
+            const userAdminIcons = headerIcons.querySelectorAll('.icon-items');
+            userAdminIcons.forEach(icon => {
+                icon.style.display = 'flex';
+            });
+            
+            // Remove any existing user auth container
+            const existingUserAuth = headerIcons.querySelector('.user-auth-container');
+            if (existingUserAuth) {
+                existingUserAuth.remove();
+            }
+        }
     }
 });
 
@@ -65,18 +87,60 @@ function goToProfile() {
 // Logout function
 function logoutUser() {
     console.log("Logout function called");
+    
+    if (!confirm('Are you sure you want to logout?')) {
+        return;
+    }
+    
     fetch('/logout', {
         method: 'POST',
-        credentials: 'same-origin'
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
     .then(response => {
         console.log("Logout response:", response);
         if (response.ok) {
+            // Clear authentication variables
+            window.isAuthenticated = false;
+            window.currentUser = null;
+            
+            // Clear any stored data
+            localStorage.removeItem('profileImage');
+            
+            // Redirect to signup page
             window.location.href = '/signup';
+        } else {
+            throw new Error('Logout failed');
         }
     })
     .catch(error => {
         console.error('Logout error:', error);
         alert('Error logging out. Please try again.');
+    });
+}
+
+// Function to clear authentication UI (useful for cleanup)
+function clearAuthUI() {
+    const headerIcons = document.querySelector('.header-icons');
+    if (headerIcons) {
+        // Remove user auth container
+        const existingUserAuth = headerIcons.querySelector('.user-auth-container');
+        if (existingUserAuth) {
+            existingUserAuth.remove();
+        }
+        
+        // Show user/admin icons
+        const userAdminIcons = headerIcons.querySelectorAll('.icon-items');
+        userAdminIcons.forEach(icon => {
+            icon.style.display = 'flex';
+        });
+    }
+    
+    // Show mobile menu items
+    const mobileNavItems = document.querySelectorAll('.nav-user-admin');
+    mobileNavItems.forEach(item => {
+        item.style.display = 'block';
     });
 }

@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Contact Us - SecureVoice</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="stylesheet" href="assets/css/base/base.css">
-    <link rel="stylesheet" href="assets/css/base/header.css">
+    <link rel="stylesheet" href="assets/css/base/enhanced-header.css">
     <link rel="stylesheet" href="assets/css/base/footer.css">
     <link rel="stylesheet" href="assets/css/style/contact-us-style.css">
     <link rel="stylesheet" href="assets/css/responsive/contact-us-responsive.css">
@@ -15,13 +15,14 @@
 </head>
 <body>
 
-<!-- Start: Header -->
+<!-- Start: Enhanced Header -->
 <header>
     <div class="container">
         <div class="header-contents">
             <div class="logo">
-                <a href="homepage.html">
-                    <img src="assets/images/secureVOICE-logo.png" alt="secureVOICE-logo" class="floating-logo">
+                <a href="/homepage">
+                    <div class="logo-text">SecureVoice</div>
+                    <div class="logo-subtitle">Crime Reporting System</div>
                 </a>
             </div>
             <div class="navigation">
@@ -31,34 +32,28 @@
                         <a href="/homepage" class="navigation-link">Home</a>
                     </li>
                     <li class="navigation-item">
-                        <a href="#" class="navigation-link">Services</a>
+                        <a href="/homepage#how-it-works" class="navigation-link">Services</a>
                     </li>
                     <li class="navigation-item">
-                        <a href="#" class="navigation-link">Cases</a>
+                        <a href="#" class="navigation-link" onclick="window.alert('Not Done Yet')">Cases</a>
                     </li>
                     <li class="navigation-item">
-                        <a href="#" class="navigation-link">About Us</a>
+                        <a href="/homepage#ready-to-get-started" class="navigation-link">About Us</a>
                     </li>
                     <li class="navigation-item navigation-active">
                         <a href="#" class="navigation-link navigation-link-active">Contact Us</a>
-                    </li>
-                    <li class="navigation-item nav-user-admin">
-                        <a href="#" class="navigation-link">User</a>
-                    </li>
-                    <li class="navigation-item nav-user-admin">
-                        <a href="#" class="navigation-link">Admin</a>
                     </li>
                 </ul>
                 <button id="menu-open-btn" class="fas fa-bars"></button>
             </div>
             <div class="header-icons">
-                <a href="#" class="icon-items user">
+                <a href="/signup" class="icon-items user">
                     <div class="icon-border">
                         <i class="fa-solid fa-user"></i>
                     </div>
                     <span>User</span>
                 </a>
-                <a href="#" class="icon-items admin">
+                <a href="/adminLogin" class="icon-items admin">
                     <div class="icon-border">
                         <i class="fa-solid fa-user-tie"></i>
                     </div>
@@ -68,7 +63,7 @@
         </div>
     </div>
 </header>
-<!-- End: Header -->
+<!-- End: Enhanced Header -->
 
 <!-- Start: Contact Us -->
 <section id="contact-us">
@@ -87,7 +82,7 @@
                 </div>
                 <div class="information">
                     <i class="fas fa-envelope"></i>
-                    <p>info@securevoice.com</p>
+                    <p>securevoice05@gmail.com</p>
                 </div>
                 <div class="information">
                     <i class="fas fa-phone-alt"></i>
@@ -131,7 +126,6 @@
 
                 <div class="input-container">
                     <input type="tel" name="phone" class="input" required pattern="[0-9]{11}" title="Please enter a valid 11-digit Bangladeshi phone number">
-
                     <label for="phone" id="phone">Phone</label>
                     <span>Phone</span>
                 </div>
@@ -146,90 +140,102 @@
             </form>
         </div>
     </div>
-    </div>
 </section>
 <!-- End: Contact Us -->
+
 <!-- Start: Footer -->
-    <footer id="footer">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-main">
-                    <div class="footer-logo">
-                        <img src="assets/images/secureVOICE-logo.png" alt="secureVOICE-logo" class="floating-logo">
-                        <p class="footer-title">SECURE VOICE</p>
+<footer id="footer">
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-main">
+                <div class="footer-logo">
+                    <img src="assets/images/secureVOICE-logo.png" alt="secureVOICE-logo" class="floating-logo">
+                    <p class="footer-title">SECURE VOICE</p>
+                </div>
+                <div class="footer-links">
+                    <h4>LINKS</h4>
+                    <ul class="footer-nav">
+                        <li class="footer-nav-items">
+                            <a href="/homepage" class="footer-nav-links">Home</a>
+                        </li>
+                        <li class="footer-nav-items"><a href="#" class="footer-nav-links">Services</a></li>
+                        <li class="footer-nav-items"><a href="#" class="footer-nav-links">Cases</a></li>
+                        <li class="footer-nav-items"><a href="#" class="footer-nav-links">About Us</a></li>
+                        <li class="footer-nav-items active"><a href="#" class="footer-nav-links active">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>CONTACT</h4>
+                    <ul class="footer-contact-info">
+                        <div class="contact">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <li>Dhaka, Bangladesh</li>
+                        </div>
+                        <div class="contact">
+                            <i class="fas fa-envelope"></i>
+                            <li>securevoice05@gmail.com</li>
+                        </div>
+                        <div class="contact">
+                            <i class="fas fa-phone-alt"></i> 
+                            <li>+880-123-456-7890</li>
+                        </div>
+                        <div class="contact">
+                            <i class="fas fa-clock"></i>
+                            <li>Open 24/7</li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-meta">
+                <div class="footer-copy">
+                    <div class="copyright-title">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Crime Reporting System</span>
                     </div>
-                    <div class="footer-links">
-                        <h4>LINKS</h4>
-                        <ul class="footer-nav">
-                            <li class="footer-nav-items">
-                                <a href="/homepage" class="footer-nav-links">Home</a>
-                            </li>
-                            <li class="footer-nav-items"><a href="#" class="footer-nav-links">Services</a></li>
-                            <li class="footer-nav-items"><a href="#" class="footer-nav-links">Cases</a></li>
-                            <li class="footer-nav-items"><a href="#" class="footer-nav-links">About Us</a></li>
-                            <li class="footer-nav-items active"><a href="#" class="footer-nav-links active">Contact Us</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-contact">
-                        <h4>CONTACT</h4>
-                        <ul class="footer-contact-info">
-                            <div class="contact">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <li>Dhaka, Bangladesh</li>
-                            </div>
-                            <div class="contact">
-                                <i class="fas fa-envelope"></i>
-                                <li>info@securevoice.com</li>
-                            </div>
-                            <div class="contact">
-                                <i class="fas fa-phone-alt"></i> 
-                                <li>+880-123-456-7890</li>
-                            </div>
-                            <div class="contact">
-                                <i class="fas fa-clock"></i>
-                                <li></i> Open 24/7</li>
-                            </div>
-                        </ul>
+                    <div class="copyright-text">
+                        <span>
+                            &copy; 2025, Secure Voice - Crime Reporting Platform. All rights reserved.
+                        </span>
                     </div>
                 </div>
-                <div class="footer-meta">
-                    <div class="footer-copy">
-                        <div class="copyright-title">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Crime Reporting System</span>
-                        </div>
-                        <div class="copyright-text">
-                            <span>
-                                &copy; 2025, Secure Voice - Crime Reporting Platform. All rights reserved.
-                            </span>
-                        </div>
+                <div class="footer-social">
+                    <div class="social-area">
+                        <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
                     </div>
-                    <div class="footer-social">
-                        <div class="social-area">
-                            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        </div>
-                        <div class="social-area">
-                            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                        <div class="social-area">
-                            <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
-                        </div>
-                        <div class="social-area">
-                            <a href="mailto: info@securevoice.com"><i class="fas fa-envelope"></i></a>
-                        </div>
-                        <div class="social-area">
-                            <a href="https://github.com/devmahbe/DBMS-Project-Spring-25" target="_blank"><i class="fab fa-github"></i></a>
-                        </div>
+                    <div class="social-area">
+                        <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <div class="social-area">
+                        <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    <div class="social-area">
+                        <a href="mailto: securevoice05@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                    <div class="social-area">
+                        <a href="https://github.com/devmahbe/DBMS-Project-Spring-25" target="_blank"><i class="fab fa-github"></i></a>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
 <!-- End: Footer --> 
 
     <script src="assets/js/contact-us.js"></script>
     <script src="assets/js/base/header.js"></script>
     <script src="assets/js/auth-handler.js" defer></script>
+
+    <!-- Add scroll effect for header -->
+    <script>
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
 
 </body>
 </html>

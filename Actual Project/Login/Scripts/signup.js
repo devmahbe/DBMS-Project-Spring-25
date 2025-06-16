@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // all your JS code here
 
 // EmailJS public key
-emailjs.init('_PQlkm6Bfx4WIq1Px');
+emailjs.init('1RHpGS2tq0gxGer21');
 
 let generatedOTP = "";
 
@@ -132,7 +132,7 @@ form.addEventListener("submit", function (e) {
         otp: generatedOTP,
     };
 
-    emailjs.send('service_auy2e9x', 'template_46aynot', templateParams)
+    emailjs.send('service_pl2gk4v', 'template_8k86xhk', templateParams)
         .then(response => {
             otpInputDiv.style.display = 'block';
             document.getElementById("verify-otp-btn").style.display = "block"; // <-- ADD THIS

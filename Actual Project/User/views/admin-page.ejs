@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="/Home Page/assets/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="/Admin Page/assets/js/admin-dashboard-protection.js"></script>
+    <style>
+        /* Professional Admin Dashboard CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        :root {
+            /* Professional Color Palette */
+            --primary-dark: #1a202c;
+            --primary-blue: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary-gray: #64748b;
+            --light-gray: #f1f5f9;
+            --border-gray: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --accent: #8b5cf6;
+
+            /* Modern Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            /* Typography */
+            --font-xs: 0.75rem;
+            --font-sm: 0.875rem;
+            --font-base: 1rem;
+            --font-lg: 1.125rem;
+            --font-xl: 1.25rem;
+            --font-2xl: 1.5rem;
+            --font-3xl: 2rem;
+
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+        }
+
+        /* Base Styles */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* Main Layout */
+        .admin-page {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--light-gray);
+        }
+
+        /* Header */
+        .admin-header {
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            z-index: 100;
+        }
+
+        .admin-header .title {
+            font-size: var(--font-2xl);
+            font-weight: 700;
+            color: var(--white);
+            font-family: "Poppins", sans-serif;
+        }
+
+        .admin-header .sub-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-lg);
+        }
+
+        .admin-header .location {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-sm) var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .admin-header .location i {
+            color: var(--white);
+            font-size: var(--font-sm);
+        }
+
+        .admin-header .location select {
+            background: transparent;
+            border: none;
+            color: var(--white);
+            outline: none;
+            font-size: var(--font-sm);
+            font-weight: 500;
+        }
+
+        .admin-header .location option {
+            background: var(--primary-dark);
+            color: var(--white);
+        }
+
+        .profile-area {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: url("https://images.unsplash.com/photo-1746469471553-afa9f34157fd?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center / cover;
+            transition: transform 0.2s ease;
+        }
+
+        .profile-area:hover {
+            transform: scale(1.05);
+        }
+
+        /* Side Panel Container */
+        .side-panel-container {
+            display: flex;
+            height: calc(100vh - 70px);
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .side-panel {
+            width: 280px;
+            background: var(--white);
+            border-right: 1px solid var(--border-gray);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .side-panel .buttons {
+            flex: 1;
+            padding: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .btn-organize {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: var(--font-sm);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-organize:hover {
+            background: var(--light-gray);
+            color: var(--text-dark);
+            transform: translateX(2px);
+        }
+
+        .btn-organize.active {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-organize i {
+            font-size: var(--font-lg);
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--border-gray);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .home-btn, .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: var(--font-sm);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .home-btn {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .home-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        /* Panel Content */
+        .panel-content {
+            flex: 1;
+            background: var(--light-gray);
+            overflow-y: auto;
+            padding: var(--spacing-xl);
+        }
+
+        .panel-section {
+            display: none;
+            height: 100%;
+        }
+
+        .panel-section:first-child {
+            display: block;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            height: calc(100vh - 70px - 4rem);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-container {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-2xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .profile-title {
+            font-size: var(--font-2xl);
+            font-weight: 700;
+            color: var(--text-dark);
+            font-family: "Poppins", sans-serif;
+        }
+
+        .edit-profile-btn, .save-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: var(--font-sm);
+            transition: all 0.2s ease;
+        }
+
+        .edit-profile-btn {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .edit-profile-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .save-profile-btn {
+            background: var(--success);
+            color: var(--white);
+            display: none;
+        }
+
+        .save-profile-btn:hover {
+            background: #047857;
+            transform: translateY(-1px);
+        }
+
+        .form-content {
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            background: var(--light-gray);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-gray);
+        }
+
+        .form-content label {
+            display: block;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: var(--spacing-sm);
+            font-family: "Poppins", sans-serif;
+        }
+
+        .form-content span {
+            display: block;
+            font-size: var(--font-base);
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .form-content-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        .editable-field {
+            display: none;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            font-size: var(--font-base);
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .editable-field:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: var(--spacing-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: var(--font-2xl);
+            font-weight: 700;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .table-container {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: var(--light-gray);
+            color: var(--text-dark);
+            font-weight: 600;
+            padding: var(--spacing-md) var(--spacing-lg);
+            text-align: left;
+            border-bottom: 2px solid var(--border-gray);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-gray);
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--light-gray);
+        }
+
+        tbody td {
+            padding: var(--spacing-md) var(--spacing-lg);
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-size: var(--font-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-badge.verifying {
+            background: #dbeafe;
+            color: var(--primary-blue);
+        }
+
+        .status-badge.investigating {
+            background: #fce7f3;
+            color: #be185d;
+        }
+
+        .status-badge.resolved {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-md);
+            font-size: var(--font-xs);
+            font-weight: 500;
+            margin: var(--spacing-xs);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .action-btn.tertiary {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .action-btn.tertiary:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+        }
+
+        /* Actions container for better spacing */
+        .actions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .action-btn.primary {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .action-btn.secondary {
+            background: var(--secondary-gray);
+            color: var(--white);
+        }
+
+        .action-btn.secondary:hover {
+            background: #475569;
+            transform: translateY(-1px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .modal-title {
+            font-size: var(--font-xl);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: var(--font-xl);
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-md);
+        }
+
+        .btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn.primary {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn.primary:hover {
+            background: var(--primary-light);
+        }
+
+        .btn.secondary {
+            background: var(--border-gray);
+            color: var(--text-dark);
+            border: none;
+        }
+
+        .btn.secondary:hover {
+            background: var(--secondary-gray);
+            color: var(--white);
+        }
+
+        /* Form Elements */
+        select, input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            font-size: var(--font-base);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: var(--font-xl);
+            margin-bottom: var(--spacing-md);
+            color: var(--text-dark);
+        }
+
+
+        /* Chat Button Styles */
+        .chat-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--font-xs);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            min-width: 70px;
+            text-align: center;
+            margin: var(--spacing-xs);
+        }
+
+        .chat-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        /* Chat Modal Styles */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .chat-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .chat-container {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 500px;
+            height: 600px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            padding: var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: var(--font-lg);
+            font-weight: 600;
+        }
+
+        .chat-header .complaint-id {
+            font-size: var(--font-sm);
+            opacity: 0.9;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: var(--font-lg);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            transition: background-color 0.2s ease;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-sm);
+            line-height: 1.5;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.admin {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border-bottom-right-radius: var(--radius-sm);
+        }
+
+        .message.user {
+            align-self: flex-start;
+            background: var(--white);
+            color: var(--text-dark);
+            border: 1px solid var(--border-gray);
+            border-bottom-left-radius: var(--radius-sm);
+        }
+
+        .message-time {
+            font-size: var(--font-xs);
+            opacity: 0.7;
+            margin-top: var(--spacing-xs);
+            text-align: right;
+        }
+
+        .message.user .message-time {
+            text-align: left;
+        }
+
+        .chat-input-container {
+            padding: var(--spacing-lg);
+            background: var(--white);
+            border-top: 1px solid var(--border-gray);
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-sm);
+            font-family: inherit;
+            resize: none;
+            min-height: 44px;
+            max-height: 120px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .chat-send {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-md);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            font-size: var(--font-lg);
+            transition: all 0.2s ease;
+            min-width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-send:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chat-send:disabled {
+            background: var(--secondary-gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .chat-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl);
+            color: var(--text-light);
+        }
+
+        .chat-loading i {
+            margin-right: var(--spacing-sm);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .no-messages {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .no-messages i {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.5;
+        }
+
+        /* Responsive chat modal */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 95%;
+                height: 90vh;
+                margin: 20px;
+            }
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .side-panel {
+                width: 60px;
+            }
+
+            .side-panel .buttons {
+                align-items: center;
+            }
+
+            .btn-organize span {
+                display: none;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="admin-page">
+    <!-- Header -->
+    <header class="admin-header">
+        <h1 class="title">Admin Dashboard</h1>
+        <div class="sub-title">
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                <select id="district">
+                    <option value="<%= admin.district_name %>"><%= admin.district_name %></option>
+                </select>
+            </div>
+            <div class="profile-area"></div>
+        </div>
+    </header>
+
+    <!-- Side Panel Container -->
+    <div class="side-panel-container">
+        <!-- Sidebar -->
+        <nav class="side-panel">
+            <div class="buttons">
+                <button class="btn-organize active" data-section="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </button>
+                <button class="btn-organize" data-section="reports">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
+                </button>
+                <button class="btn-organize" data-section="cases">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Cases</span>
+                </button>
+                <button class="btn-organize" data-section="users">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </button>
+                <button class="btn-organize" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/homepage" class="home-btn">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <button onclick="logoutAdmin()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="panel-content">
+            <!-- Profile Section -->
+            <section id="profile" class="panel-section profile-section">
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <h2 class="profile-title">Admin Profile</h2>
+                        <button class="edit-profile-btn" onclick="toggleEditMode()">
+                            <i class="fas fa-edit"></i>
+                            Edit Profile
+                        </button>
+                        <button class="save-profile-btn" onclick="saveProfile()">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+
+                    <div class="form-content-container">
+                        <div class="form-content">
+                            <label>Full Name</label>
+                            <span id="fullNameDisplay"><%= admin.fullName || 'Not provided' %></span>
+                            <input type="text" id="fullNameEdit" class="editable-field" value="<%= admin.fullName || '' %>">
+                        </div>
+
+                        <div class="form-content">
+                            <label>Date of Birth</label>
+                            <span id="dobDisplay"><%= admin.dob || 'Not provided' %></span>
+                            <input type="date" id="dobEdit" class="editable-field" value="<%= admin.dob || '' %>">
+                        </div>
+
+                        <div class="form-content">
+                            <label>Username</label>
+                            <span><%= admin.username %></span>
+                        </div>
+
+                        <div class="form-content">
+                            <label>Email</label>
+                            <span><%= admin.email %></span>
+                        </div>
+
+                        <div class="form-content">
+                            <label>District</label>
+                            <span><%= admin.district_name %></span>
+                        </div>
+
+                        <div class="form-content">
+                            <label>Account Created</label>
+                            <span><%= new Date(admin.created_at).toLocaleDateString() %></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="panel-section">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h2 class="table-title">
+                            <i class="fas fa-file-alt"></i>
+                            Complaint Reports
+                        </h2>
+                        <span>Total: <%= complaints.length %> complaints</span>
+                    </div>
+
+                    <div class="table-container">
+                        <% if (complaints.length > 0) { %>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% complaints.forEach(complaint => { %>
+                                    <tr>
+                                        <td>#<%= complaint.complaint_id %></td>
+                                        <td><%= complaint.username %></td>
+                                        <td><%= complaint.complaint_type %></td>
+                                        <td><%= new Date(complaint.created_at).toLocaleDateString() %></td>
+                                        <td><%= complaint.location_address || 'Not specified' %></td>
+                                        <td>
+                                                <span class="status-badge <%= complaint.status %>">
+                                                    <%= complaint.status %>
+                                                </span>
+                                        </td>
+                                        <td>
+                                            <div class="actions-container">
+                                                <button class="action-btn primary update-status-btn"
+                                                        data-complaint-id="<%= complaint.complaint_id %>"
+                                                        data-current-status="<%= complaint.status %>">
+                                                    <i class="fas fa-edit"></i> Status
+                                                </button>
+                                                <button class="action-btn secondary view-evidence-btn"
+                                                        data-complaint-id="<%= complaint.complaint_id %>">
+                                                    <i class="fas fa-eye"></i> Evidence
+                                                </button>
+                                                <button class="action-btn tertiary view-description-btn"
+                                                        data-complaint-id="<%= complaint.complaint_id %>"
+                                                        data-description="<%= complaint.description || 'No description provided' %>">
+                                                    <i class="fas fa-file-text"></i> Description
+                                                </button>
+                                                <button class="chat-btn" onclick="openAdminChat('<%= complaint.complaint_id %>', '<%= complaint.username %>')">
+                                                    <i class="fas fa-comments"></i> Chat
+                                                </button>
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                                </tbody>
+                            </table>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h3>No Complaints Found</h3>
+                                <p>There are no complaints assigned to your district yet.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cases Section -->
+            <section id="cases" class="panel-section">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h2 class="table-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Case Analytics
+                        </h2>
+                        <button class="btn primary" onclick="refreshCases()">
+                            <i class="fas fa-refresh"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <div id="cases-content">
+                            <!-- Cases data will be loaded here via JavaScript -->
+                            <div class="empty-state">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <h3>Loading Cases...</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="panel-section">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h2 class="table-title">
+                            <i class="fas fa-users"></i>
+                            Complainant Users
+                        </h2>
+                        <span>Total: <%= users.length %> users</span>
+                    </div>
+
+                    <div class="table-container">
+                        <% if (users.length > 0) { %>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Location</th>
+                                    <th>Age</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% users.forEach(user => { %>
+                                    <tr>
+                                        <td><%= user.fullName || 'Not provided' %></td>
+                                        <td><%= user.username %></td>
+                                        <td><%= user.email %></td>
+                                        <td><%= user.phone || 'Not provided' %></td>
+                                        <td><%= user.location || 'Not provided' %></td>
+                                        <td><%= user.age || 'Not provided' %></td>
+                                    </tr>
+                                <% }); %>
+                                </tbody>
+                            </table>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="fas fa-user-slash"></i>
+                                <h3>No Users Found</h3>
+                                <p>No users have filed complaints in your district yet.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="panel-section">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h2 class="table-title">
+                            <i class="fas fa-cog"></i>
+                            Settings
+                        </h2>
+                    </div>
+
+                    <div style="padding: 2rem;">
+                        <div class="empty-state">
+                            <i class="fas fa-tools"></i>
+                            <h3>Settings Coming Soon</h3>
+                            <p>Advanced settings and configuration options will be available here.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<!-- Chat Modal -->
+
+<div id="chatModal" class="chat-modal">
+    <div class="chat-container">
+        <div class="chat-header">
+            <div>
+                <h3>Chat with User</h3>
+                <div class="complaint-id">Complaint #<span id="currentComplaintId"></span></div>
+            </div>
+            <button class="chat-close" onclick="closeAdminChat()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-loading">
+                <i class="fas fa-spinner"></i>
+                Loading messages...
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <textarea class="chat-input" id="chatInput" placeholder="Type your message..." rows="1"></textarea>
+            <button class="chat-send" id="chatSend" onclick="sendAdminMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Status Update Modal -->
+<div id="statusModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Update Complaint Status</h3>
+            <button class="close-btn" onclick="closeModal('statusModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Complaint ID: <strong id="status-complaint-id"></strong></p>
+            <p>Current Status: <strong id="current-status"></strong></p>
+            <label for="new-status">New Status:</label>
+            <select id="new-status">
+                <option value="pending">Pending</option>
+                <option value="verifying">Verifying</option>
+                <option value="investigating">Investigating</option>
+                <option value="resolved">Resolved</option>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary" onclick="closeModal('statusModal')">Cancel</button>
+            <button class="btn primary" onclick="updateComplaintStatus()">Update Status</button>
+        </div>
+    </div>
+</div>
+
+<!-- Evidence Modal -->
+<div id="evidenceModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Complaint Evidence</h3>
+            <button class="close-btn" onclick="closeModal('evidenceModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Complaint ID: <strong id="evidence-complaint-id"></strong></p>
+            <div id="evidence-content">
+                <!-- Evidence will be loaded here -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary" onclick="closeModal('evidenceModal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Description Modal -->
+<div id="descriptionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Complaint Description</h3>
+            <button class="close-btn" onclick="closeModal('descriptionModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Complaint ID: <strong id="description-complaint-id"></strong></p>
+            <div id="description-content" style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius-md); margin-top: 1rem; line-height: 1.6;">
+                <!-- Description will be loaded here -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn secondary" onclick="closeModal('descriptionModal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="/Admin Page/admin-chat.js"></script>
+
+<script>
+
+    // === CHAT FUNCTIONALITY ===
+    let currentComplaintId = null;
+    let currentUsername = null;
+
+    // Open admin chat
+    function openAdminChat(complaintId, username) {
+        currentComplaintId = complaintId;
+        currentUsername = username;
+
+        document.getElementById('currentComplaintId').textContent = complaintId;
+        document.getElementById('chatModal').classList.add('show');
+
+        // Load existing messages
+        loadChatMessages(complaintId);
+
+        // Auto-resize textarea
+        const chatInput = document.getElementById('chatInput');
+        chatInput.addEventListener('input', autoResizeTextarea);
+
+        // Enter key to send message
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAdminMessage();
+            }
+        });
+    }
+
+    // Close admin chat
+    function closeAdminChat() {
+        document.getElementById('chatModal').classList.remove('show');
+        currentComplaintId = null;
+        currentUsername = null;
+    }
+
+    // Load chat messages
+    async function loadChatMessages(complaintId) {
+        const chatMessages = document.getElementById('chatMessages');
+
+        try {
+            const response = await fetch(`/admin/chat/messages/${complaintId}`);
+            const data = await response.json();
+
+            if (data.success) {
+                displayMessages(data.messages);
+            } else {
+                chatMessages.innerHTML = `
+                <div class="no-messages">
+                    <i class="fas fa-comments"></i>
+                    <h4>No messages yet</h4>
+                    <p>Start the conversation with the user</p>
+                </div>
+            `;
+            }
+        } catch (error) {
+            console.error('Error loading messages:', error);
+            chatMessages.innerHTML = `
+            <div class="no-messages">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h4>Error loading messages</h4>
+                <p>Please try again later</p>
+            </div>
+        `;
+        }
+    }
+
+    // Display messages
+    function displayMessages(messages) {
+        const chatMessages = document.getElementById('chatMessages');
+
+        if (messages.length === 0) {
+            chatMessages.innerHTML = `
+            <div class="no-messages">
+                <i class="fas fa-comments"></i>
+                <h4>No messages yet</h4>
+                <p>Start the conversation with the user</p>
+            </div>
+        `;
+            return;
+        }
+
+        chatMessages.innerHTML = '';
+
+        messages.forEach(message => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${message.sender_type}`;
+
+            const time = new Date(message.created_at).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            messageDiv.innerHTML = `
+            ${message.message}
+            <div class="message-time">${time}</div>
+        `;
+
+            chatMessages.appendChild(messageDiv);
+        });
+
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Send admin message
+    async function sendAdminMessage() {
+        const chatInput = document.getElementById('chatInput');
+        const message = chatInput.value.trim();
+
+        if (!message || !currentComplaintId) return;
+
+        const chatSend = document.getElementById('chatSend');
+        chatSend.disabled = true;
+
+        try {
+            const response = await fetch('/admin/chat/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    complaintId: currentComplaintId,
+                    message: message,
+                    senderType: 'admin'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+                loadChatMessages(currentComplaintId); // Reload messages
+            } else {
+                alert('Error sending message: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            alert('Error sending message. Please try again.');
+        } finally {
+            chatSend.disabled = false;
+        }
+    }
+
+    // Auto-resize textarea
+    function autoResizeTextarea() {
+        const textarea = document.getElementById('chatInput');
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('chatModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeAdminChat();
+        }
+    });
+
+    // === YOUR EXISTING FUNCTIONS ===
+    // Section navigation
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const buttons = document.querySelectorAll('.btn-organize');
+    //     const sections = document.querySelectorAll('.panel-section');
+    //
+    //     buttons.forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const targetSection = this.getAttribute('data-section');
+    //
+    //             // Remove active class from all buttons
+    //             buttons.forEach(btn => btn.classList.remove('active'));
+    //             // Add active class to clicked button
+    //             this.classList.add('active');
+    //
+    //             // Hide all sections
+    //             sections.forEach(section => section.style.display = 'none');
+    //             // Show target section
+    //             document.getElementById(targetSection).style.display = 'block';
+    //         });
+    //     });
+    // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Admin dashboard JavaScript functionality
+    let isEditMode = false;
+
+    // Tab functionality
+    const buttons = document.querySelectorAll('.btn-organize');
+    const sections = document.querySelectorAll('.panel-section');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Get target section
+            const target = button.getAttribute('data-section');
+
+            // Show target section, hide others
+            sections.forEach(section => {
+                section.style.display = section.id === target ? 'block' : 'none';
+            });
+
+            // Load cases data when cases section is selected
+            if (target === 'cases') {
+                loadCases();
+            }
+        });
+    });
+
+    // Event delegation for action buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.update-status-btn')) {
+            const btn = e.target.closest('.update-status-btn');
+            const complaintId = btn.getAttribute('data-complaint-id');
+            const currentStatus = btn.getAttribute('data-current-status');
+            openStatusModal(complaintId, currentStatus);
+        }
+
+        if (e.target.closest('.view-evidence-btn')) {
+            const btn = e.target.closest('.view-evidence-btn');
+            const complaintId = btn.getAttribute('data-complaint-id');
+            viewEvidence(complaintId);
+        }
+
+        if (e.target.closest('.view-description-btn')) {
+            const btn = e.target.closest('.view-description-btn');
+            const complaintId = btn.getAttribute('data-complaint-id');
+            const description = btn.getAttribute('data-description');
+            viewDescription(complaintId, description);
+        }
+    });
+
+
+    // Profile editing functionality
+    function toggleEditMode() {
+        isEditMode = !isEditMode;
+
+        const displays = document.querySelectorAll('[id$="Display"]');
+        const edits = document.querySelectorAll('[id$="Edit"]');
+        const editBtn = document.querySelector('.edit-profile-btn');
+        const saveBtn = document.querySelector('.save-profile-btn');
+
+        if (isEditMode) {
+            displays.forEach(display => display.style.display = 'none');
+            edits.forEach(edit => edit.style.display = 'block');
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'flex';
+        } else {
+            displays.forEach(display => display.style.display = 'block');
+            edits.forEach(edit => edit.style.display = 'none');
+            editBtn.style.display = 'flex';
+            saveBtn.style.display = 'none';
+        }
+    }
+
+    function saveProfile() {
+        const fullName = document.getElementById('fullNameEdit').value;
+        const dob = document.getElementById('dobEdit').value;
+
+        fetch('/update-admin-profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fullName, dob })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update display values
+                    document.getElementById('fullNameDisplay').textContent = fullName || 'Not provided';
+                    document.getElementById('dobDisplay').textContent = dob || 'Not provided';
+
+                    toggleEditMode();
+                    alert('Profile updated successfully!');
+                } else {
+                    alert('Error updating profile: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating profile');
+            });
+    }
+
+    // Modal functionality
+    function openStatusModal(complaintId, currentStatus) {
+        document.getElementById('status-complaint-id').textContent = complaintId;
+        document.getElementById('current-status').textContent = currentStatus;
+        document.getElementById('new-status').value = currentStatus;
+        document.getElementById('statusModal').style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function updateComplaintStatus() {
+        const complaintId = document.getElementById('status-complaint-id').textContent;
+        const newStatus = document.getElementById('new-status').value;
+
+        fetch('/update-complaint-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ complaintId, newStatus })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the status in the table
+                    const btn = document.querySelector(`[data-complaint-id="${complaintId}"]`);
+                    if (btn) {
+                        const row = btn.closest('tr');
+                        const statusBadge = row.querySelector('.status-badge');
+                        if (statusBadge) {
+                            statusBadge.className = `status-badge ${newStatus}`;
+                            statusBadge.textContent = newStatus;
+                        }
+                        // Update the button's data attribute
+                        btn.setAttribute('data-current-status', newStatus);
+                    }
+
+                    closeModal('statusModal');
+                    alert('Status updated successfully!');
+                } else {
+                    alert('Error updating status: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating status');
+            });
+    }
+
+    function viewEvidence(complaintId) {
+        document.getElementById('evidence-complaint-id').textContent = complaintId;
+        document.getElementById('evidence-content').innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading evidence...</p></div>';
+
+        fetch(`/get-complaint-evidence/${complaintId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const evidenceContainer = document.getElementById('evidence-content');
+
+                    if (data.evidence.length === 0) {
+                        evidenceContainer.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><h3>No Evidence</h3><p>This complaint has no evidence to show.</p></div>';
+                    } else {
+                        let evidenceHtml = '<div style="display: grid; gap: 1rem;">';
+                        data.evidence.forEach(evidence => {
+                            const fileExtension = evidence.file_path.split('.').pop().toLowerCase();
+                            const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension);
+                            const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(fileExtension);
+                            const isAudio = ['mp3', 'wav', 'ogg', 'aac'].includes(fileExtension);
+
+                            evidenceHtml += `
+            <div style="padding: 1rem; border: 1px solid var(--border-gray); border-radius: var(--radius-md);">
+                <p><strong>Type:</strong> ${evidence.file_type}</p>
+                <p><strong>Uploaded:</strong> ${new Date(evidence.uploaded_at).toLocaleString()}</p>
+                <p><strong>File:</strong> ${evidence.file_path}</p>
+                <div style="margin-top: 1rem;">
+        `;
+
+                            if (isImage) {
+                                evidenceHtml += `<img src="/uploads/${evidence.file_path}" alt="Evidence" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md);">`;
+                            } else if (isVideo) {
+                                evidenceHtml += `<video controls style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md);"><source src="/uploads/${evidence.file_path}" type="video/${fileExtension}">Your browser does not support video.</video>`;
+                            } else if (isAudio) {
+                                evidenceHtml += `<audio controls style="width: 100%;"><source src="/uploads/${evidence.file_path}" type="audio/${fileExtension}">Your browser does not support audio.</audio>`;
+                            } else {
+                                evidenceHtml += `<a href="/uploads/${evidence.file_path}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Download File</a>`;
+                            }
+
+                            evidenceHtml += `</div></div>`;
+                        });
+                        evidenceHtml += '</div>';
+                        evidenceContainer.innerHTML = evidenceHtml;
+
+                    }
+                } else {
+                    document.getElementById('evidence-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load evidence.</p></div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('evidence-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load evidence.</p></div>';
+            });
+
+        document.getElementById('evidenceModal').style.display = 'flex';
+    }
+
+    function viewDescription(complaintId, description) {
+        document.getElementById('description-complaint-id').textContent = complaintId;
+        document.getElementById('description-content').textContent = description;
+        document.getElementById('descriptionModal').style.display = 'flex';
+    }
+
+
+
+    function loadCases() {
+        document.getElementById('cases-content').innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Loading Cases...</h3></div>';
+
+        fetch('/get-admin-cases')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const casesContainer = document.getElementById('cases-content');
+
+                    let casesHtml = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 2rem; margin-bottom: 2rem;">
+                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
+                            <h3 style="color: var(--primary-blue); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.total}</h3>
+                            <p style="color: var(--text-light);">Total Cases</p>
+                        </div>
+                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
+                            <h3 style="color: var(--warning); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.pending}</h3>
+                            <p style="color: var(--text-light);">Pending</p>
+                        </div>
+                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
+                            <h3 style="color: var(--primary-blue); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.verifying}</h3>
+                            <p style="color: var(--text-light);">Verifying</p>
+                        </div>
+                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
+                            <h3 style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.investigating}</h3>
+                            <p style="color: var(--text-light);">Investigating</p>
+                        </div>
+                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
+                            <h3 style="color: var(--success); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.resolved}</h3>
+                            <p style="color: var(--text-light);">Resolved</p>
+                        </div>
+                    </div>
+                `;
+
+                    if (data.cases.length > 0) {
+                        casesHtml += `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Last Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                        data.cases.forEach(case_item => {
+                            casesHtml += `
+                            <tr>
+                                <td>#${case_item.complaint_id}</td>
+                                <td>${case_item.username}</td>
+                                <td>${case_item.complaint_type}</td>
+                                <td><span class="status-badge ${case_item.status}">${case_item.status}</span></td>
+                                <td>${new Date(case_item.created_at).toLocaleDateString()}</td>
+                                <td>${case_item.last_updated ? new Date(case_item.last_updated).toLocaleDateString() : 'Not updated'}</td>
+                            </tr>
+                        `;
+                        });
+
+                        casesHtml += '</tbody></table>';
+                    } else {
+                        casesHtml += '<div class="empty-state"><i class="fas fa-chart-bar"></i><h3>No Cases Found</h3><p>No cases have been handled yet.</p></div>';
+                    }
+
+                    casesContainer.innerHTML = casesHtml;
+                } else {
+                    document.getElementById('cases-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load cases data.</p></div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('cases-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load cases data.</p></div>';
+            });
+    }
+
+    function refreshCases() {
+        loadCases();
+    }
+
+    function logoutAdmin() {
+        if (confirm('Are you sure you want to logout?')) {
+            fetch('/admin-logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/homepage';
+                    } else {
+                        alert('Error logging out: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error logging out');
+                });
+        }
+    }
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Load cases when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize with profile section active
+        document.getElementById('profile').style.display = 'block';
+    });
+
+
+
+
+
+</script>
+</body>
+</html>
