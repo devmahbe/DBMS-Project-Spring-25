@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const mapBtn = document.querySelector(".map-btn");
     const locationInput = document.getElementById("location");
     const mapContainer = document.querySelector(".map-placeholder");
-
     let map;
     let marker;
     let selectedFiles = {
@@ -135,45 +134,69 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Submit form
+    // Update the submit form section in complainForm.js
     form.addEventListener("submit", function (e) {
         e.preventDefault();
-        
+
         // Create FormData object
         const formData = new FormData();
-        
+
         // Add form fields
         formData.append('complaintType', document.getElementById('complaintType').value);
         formData.append('description', document.getElementById('description').value);
         formData.append('incidentDate', document.getElementById('incidentDate').value);
         formData.append('location', document.getElementById('location').value);
-        
+
         // Add files
         if (selectedFiles.image) formData.append('evidence', selectedFiles.image);
         if (selectedFiles.video) formData.append('evidence', selectedFiles.video);
         if (selectedFiles.audio) formData.append('evidence', selectedFiles.audio);
-        
+
         // Submit form
         fetch('/submit-complaint', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                successModal.classList.remove("hidden");
-                form.reset();
-                selectedFiles = { image: null, video: null, audio: null };
-                resetUploadDisplays();
-            } else {
-                alert(data.message || 'Error submitting complaint');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error submitting complaint');
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Notify admin about new complaint
+                    if (data.complaint && data.complaint.admin_username) {
+                        fetch('/notify-admin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                complaintId: data.complaint.id,
+                                adminEmail: data.adminEmail
+                            })
+                        })
+                        .then(notifyResponse => notifyResponse.json())
+                        .then(notifyData => {
+                            if (notifyData.success && notifyData.complaint) {
+                                sendEmailToAdmin(data.adminEmail, notifyData.complaint);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error notifying admin:', error);
+                        });
+                    }
+
+                    successModal.classList.remove("hidden");
+                    form.reset();
+                    selectedFiles = { image: null, video: null, audio: null };
+                    resetUploadDisplays();
+                } else {
+                    alert(data.message || 'Error submitting complaint');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting complaint');
+            });
     });
+
 
     function resetUploadDisplays() {
         const uploadBoxes = document.querySelectorAll('.upload-box');
@@ -199,3 +222,30 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = '/profile';
     });
 });
+
+function sendEmailToAdmin(adminEmail, complaintData) {
+
+    const emailParams = {
+        to_email: adminEmail,
+        complaint_id: complaintData.id,
+        complaint_type: complaintData.type,
+        user_name: complaintData.username,
+        description: complaintData.description.substring(0, 200) + '...', // Limit description length
+        location: complaintData.location,
+        submitted_date: complaintData.submittedDate
+    };
+
+    // Use your existing EmailJS configuration
+
+    if (typeof emailjs !== 'undefined') {
+        emailjs.send('service_pl2gk4v', 'template_8k86xhk', emailParams, '1RHpGS2tq0gxGer21')
+            .then(function(response) {
+                console.log('Admin notification sent successfully!', response.status, response.text);
+            })
+            .catch(function(error) {
+                console.error('Failed to send admin notification:', error);
+            });
+    } else {
+        console.warn('EmailJS not loaded, skipping email notification');
+    }
+}

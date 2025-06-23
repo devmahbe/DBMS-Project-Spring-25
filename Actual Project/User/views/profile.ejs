@@ -144,6 +144,119 @@
             color: #124E66;
             width: 14px;
         }
+        /* Filter Section Styles */
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8ecf0;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            color: #4a5568;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .filter-input {
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: #124E66;
+            box-shadow: 0 0 0 3px rgba(18, 78, 102, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .apply-filter-btn {
+            background: linear-gradient(135deg, #124E66 0%, #0f3e52 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(18, 78, 102, 0.3);
+        }
+
+        .apply-filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(18, 78, 102, 0.4);
+        }
+
+        .clear-filter-btn {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .clear-filter-btn:hover {
+            background: #e9ecef;
+            border-color: #ced4da;
+        }
+
+
+
+
+
+
+
 
         /* Enhanced No Complaints Section */
         .no-complaints {
@@ -371,6 +484,55 @@
                     <i class="fas fa-plus"></i> New Complaint
                 </button>
             </div>
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-header">
+                    <h3 class="filter-title">
+                        <i class="fas fa-filter"></i>
+                        Filter Complaints
+                    </h3>
+                </div>
+
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label" for="dateFrom">From Date</label>
+                        <input type="date" id="dateFrom" class="filter-input">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="dateTo">To Date</label>
+                        <input type="date" id="dateTo" class="filter-input">
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="statusFilter">Status</label>
+                        <select id="statusFilter" class="filter-input">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="verifying">Verifying</option>
+                            <option value="investigating">Investigating</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label" for="locationFilter">Location</label>
+                        <input type="text" id="locationFilter" class="filter-input" placeholder="Search by location...">
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button onclick="applyFilters()" class="apply-filter-btn">
+                        <i class="fas fa-search"></i>
+                        Apply Filters
+                    </button>
+                    <button onclick="clearFilters()" class="clear-filter-btn">
+                        <i class="fas fa-times"></i>
+                        Clear Filters
+                    </button>
+                </div>
+            </div>
+
 
             <div class="complaint-list">
                 <div class="no-complaints">
@@ -510,6 +672,7 @@
 <script src="/User/Scripts/creds/config.js"></script>
 <script src="/User/Scripts/editProfile.js" defer></script>
 <script src="/User/Scripts/myComplaints.js" defer></script>
+
 
 <style>
   .disabled-input {

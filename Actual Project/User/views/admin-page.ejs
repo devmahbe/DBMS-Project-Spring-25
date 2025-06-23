@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="icon" type="image/x-icon" href="/Home Page/assets/images/favicon.ico">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="/Admin Page/assets/js/admin-dashboard-protection.js"></script>
+
     <style>
         /* Professional Admin Dashboard CSS */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
@@ -63,6 +65,177 @@
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
         }
+        :root.dark-mode {
+            /* Dark Mode Color Palette */
+            --primary-dark: #0f172a;
+            --primary-blue: #3b82f6;
+            --primary-light: #60a5fa;
+            --secondary-gray: #94a3b8;
+            --light-gray: #1e293b;
+            --border-gray: #334155;
+            --text-dark: #f1f5f9;
+            --text-light: #cbd5e1;
+            --white: #0f172a;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --accent: #a855f7;
+        }
+
+        /* Dark mode specific overrides */
+        .dark-mode .admin-page {
+            background-color: var(--primary-dark);
+        }
+
+        .dark-mode .side-panel {
+            background: var(--light-gray);
+            border-right-color: var(--border-gray);
+        }
+
+        .dark-mode .profile-container,
+        .dark-mode .data-table {
+            background: var(--light-gray);
+        }
+        .dark-mode .admin-header .title{
+            color: var(--text-dark);
+        }
+
+        .dark-mode .form-content {
+            background: var(--primary-dark);
+            border-color: var(--border-gray);
+        }
+
+        .dark-mode thead th {
+            background: var(--primary-dark);
+            color: var(--text-dark);
+            border-bottom-color: var(--border-gray);
+        }
+
+        .dark-mode tbody tr {
+            border-bottom-color: var(--border-gray);
+        }
+        .dark-mode .settings-group .strong{
+            color: var(--text-dark);
+        }
+
+        .dark-mode tbody tr:hover {
+            background: var(--primary-dark);
+        }
+
+        .dark-mode .modal-content {
+            background: var(--light-gray);
+            color: var(--text-dark);
+        }
+
+        .dark-mode input,
+        .dark-mode select,
+        .dark-mode textarea {
+            background: var(--primary-dark);
+            color: var(--text-dark);
+            border-color: var(--border-gray);
+        }
+
+        .dark-mode .btn-organize:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Settings Panel Styles */
+        .settings-section {
+            height: calc(100vh - 70px - 4rem);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .settings-container {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .settings-group {
+            margin-bottom: var(--spacing-2xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        .settings-group:last-child {
+            border-bottom: none;
+        }
+
+        .settings-title {
+            font-size: var(--font-lg);
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: var(--spacing-md);
+            font-family: "Poppins", sans-serif;
+        }
+
+        .settings-description {
+            font-size: var(--font-sm);
+            color: var(--text-light);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-blue);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-blue);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .dark-mode .slider {
+            background-color: var(--border-gray);
+        }
+
+        .dark-mode input:checked + .slider {
+            background-color: var(--primary-blue);
+        }
+
 
         /* Base Styles */
         a {
@@ -905,6 +1078,7 @@
             opacity: 0.5;
         }
 
+
         /* Responsive chat modal */
         @media (max-width: 768px) {
             .chat-container {
@@ -1194,27 +1368,68 @@
                         <% } %>
                     </div>
                 </div>
-            </section>
+    </section>
 
-            <!-- Settings Section -->
-            <section id="settings" class="panel-section">
-                <div class="data-table">
-                    <div class="table-header">
-                        <h2 class="table-title">
+
+            <!--  SETTINGS SECTION HERE -->
+            <section class="panel-section" id="settings">
+                <div class="settings-section">
+                    <div class="settings-container">
+                        <h2 class="settings-title">
                             <i class="fas fa-cog"></i>
-                            Settings
+                            Admin Settings
                         </h2>
-                    </div>
+                        <p class="settings-description">
+                            Customize your admin dashboard experience and notification preferences.
+                        </p>
 
-                    <div style="padding: 2rem;">
-                        <div class="empty-state">
-                            <i class="fas fa-tools"></i>
-                            <h3>Settings Coming Soon</h3>
-                            <p>Advanced settings and configuration options will be available here.</p>
+                        <div class="settings-group">
+                            <h3 class="settings-title">Appearance</h3>
+                            <p class="settings-description">
+                                Customize the look and feel of your dashboard.
+                            </p>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong class="strong">Dark Mode</strong>
+                                    <p style="font-size: var(--font-sm); color: var(--text-light); margin-top: 4px;">
+                                        Switch between light and dark themes
+                                    </p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="darkModeToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3 class="settings-title">Notifications</h3>
+                            <p class="settings-description">
+                                Control how and when you receive notifications.
+                            </p>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong class="strong">Email Notifications</strong>
+                                    <p style="font-size: var(--font-sm); color: var(--text-light); margin-top: 4px;">
+                                        Receive email alerts for new complaints
+                                    </p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="emailNotificationsToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+
+
+
+
         </main>
     </div>
 </div>
@@ -1314,6 +1529,97 @@
 <script src="/Admin Page/admin-chat.js"></script>
 
 <script>
+    // Embedded Admin Settings JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const emailNotificationsToggle = document.getElementById('emailNotificationsToggle');
+
+        // Load current settings
+        loadSettings();
+
+        // Dark mode toggle
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', function() {
+                toggleDarkMode(this.checked);
+                saveSettings();
+            });
+        }
+
+        // Email notifications toggle
+        if (emailNotificationsToggle) {
+            emailNotificationsToggle.addEventListener('change', function() {
+                saveSettings();
+            });
+        }
+
+        function toggleDarkMode(enabled) {
+            if (enabled) {
+                document.documentElement.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+
+        function loadSettings() {
+            // Load dark mode from localStorage first (for immediate effect)
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.documentElement.classList.add('dark-mode');
+                if (darkModeToggle) darkModeToggle.checked = true;
+            }
+
+            // Load settings from server
+            fetch('/get-admin-settings')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (darkModeToggle) {
+                            darkModeToggle.checked = data.settings.dark_mode;
+                            toggleDarkMode(data.settings.dark_mode);
+                        }
+                        if (emailNotificationsToggle) {
+                            emailNotificationsToggle.checked = data.settings.email_notifications;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading settings:', error);
+                });
+        }
+
+        function saveSettings() {
+            const settings = {
+                dark_mode: darkModeToggle ? darkModeToggle.checked : false,
+                email_notifications: emailNotificationsToggle ? emailNotificationsToggle.checked : true
+            };
+
+            fetch('/update-admin-settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(settings)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Settings saved successfully');
+                    } else {
+                        console.error('Error saving settings:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving settings:', error);
+                });
+        }
+    });
+
+
+
+
+
 
     // === CHAT FUNCTIONALITY ===
     let currentComplaintId = null;
@@ -1350,34 +1656,36 @@
         currentUsername = null;
     }
 
-    // Load chat messages
+    // Load chat messages - FIXED URL
     async function loadChatMessages(complaintId) {
         const chatMessages = document.getElementById('chatMessages');
 
         try {
-            const response = await fetch(`/admin/chat/messages/${complaintId}`);
+            // Fixed: Updated URL to match backend route
+            const response = await fetch(`/admin-chat/${complaintId}`);
             const data = await response.json();
 
             if (data.success) {
                 displayMessages(data.messages);
             } else {
+                console.error('Error from server:', data.message);
                 chatMessages.innerHTML = `
-                <div class="no-messages">
-                    <i class="fas fa-comments"></i>
-                    <h4>No messages yet</h4>
-                    <p>Start the conversation with the user</p>
-                </div>
-            `;
+            <div class="no-messages">
+                <i class="fas fa-comments"></i>
+                <h4>No messages yet</h4>
+                <p>Start the conversation with the user</p>
+            </div>
+        `;
             }
         } catch (error) {
             console.error('Error loading messages:', error);
             chatMessages.innerHTML = `
-            <div class="no-messages">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h4>Error loading messages</h4>
-                <p>Please try again later</p>
-            </div>
-        `;
+        <div class="no-messages">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h4>Error loading messages</h4>
+            <p>Please try again later</p>
+        </div>
+    `;
         }
     }
 
@@ -1387,12 +1695,12 @@
 
         if (messages.length === 0) {
             chatMessages.innerHTML = `
-            <div class="no-messages">
-                <i class="fas fa-comments"></i>
-                <h4>No messages yet</h4>
-                <p>Start the conversation with the user</p>
-            </div>
-        `;
+        <div class="no-messages">
+            <i class="fas fa-comments"></i>
+            <h4>No messages yet</h4>
+            <p>Start the conversation with the user</p>
+        </div>
+    `;
             return;
         }
 
@@ -1402,15 +1710,16 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${message.sender_type}`;
 
-            const time = new Date(message.created_at).toLocaleTimeString([], {
+            // Fixed: Use sent_at instead of created_at
+            const time = new Date(message.sent_at).toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit'
             });
 
             messageDiv.innerHTML = `
-            ${message.message}
-            <div class="message-time">${time}</div>
-        `;
+        ${message.message}
+        <div class="message-time">${time}</div>
+    `;
 
             chatMessages.appendChild(messageDiv);
         });
@@ -1419,7 +1728,7 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Send admin message
+    // Send admin message - FIXED URL
     async function sendAdminMessage() {
         const chatInput = document.getElementById('chatInput');
         const message = chatInput.value.trim();
@@ -1430,7 +1739,8 @@
         chatSend.disabled = true;
 
         try {
-            const response = await fetch('/admin/chat/send', {
+            // Fixed: Updated URL to match backend route
+            const response = await fetch('/admin-send-chat-message', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1449,6 +1759,7 @@
                 chatInput.style.height = 'auto';
                 loadChatMessages(currentComplaintId); // Reload messages
             } else {
+                console.error('Error sending message:', data.message);
                 alert('Error sending message: ' + data.message);
             }
         } catch (error) {
@@ -1459,12 +1770,13 @@
         }
     }
 
-    // Auto-resize textarea
+    // Auto-resize textarea function
     function autoResizeTextarea() {
         const textarea = document.getElementById('chatInput');
         textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        textarea.style.height = textarea.scrollHeight + 'px';
     }
+
 
     // Close modal when clicking outside
     document.getElementById('chatModal').addEventListener('click', function(e) {
@@ -1472,45 +1784,6 @@
             closeAdminChat();
         }
     });
-
-    // === YOUR EXISTING FUNCTIONS ===
-    // Section navigation
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     const buttons = document.querySelectorAll('.btn-organize');
-    //     const sections = document.querySelectorAll('.panel-section');
-    //
-    //     buttons.forEach(button => {
-    //         button.addEventListener('click', function() {
-    //             const targetSection = this.getAttribute('data-section');
-    //
-    //             // Remove active class from all buttons
-    //             buttons.forEach(btn => btn.classList.remove('active'));
-    //             // Add active class to clicked button
-    //             this.classList.add('active');
-    //
-    //             // Hide all sections
-    //             sections.forEach(section => section.style.display = 'none');
-    //             // Show target section
-    //             document.getElementById(targetSection).style.display = 'block';
-    //         });
-    //     });
-    // });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1669,6 +1942,8 @@
                 alert('Error updating status');
             });
     }
+
+
 
     function viewEvidence(complaintId) {
         document.getElementById('evidence-complaint-id').textContent = complaintId;

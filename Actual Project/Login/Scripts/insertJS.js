@@ -178,7 +178,7 @@ app.post('/adminLogin', function(req, res) {
     });
 });
 
-// Route to serve admin dashboard with complaints data
+// Route to serve admin dashboard with complaints data - FIXED VERSION
 app.get('/admin-dashboard', function(req, res) {
     console.log("Admin dashboard accessed with session:", req.session);
 
@@ -191,10 +191,12 @@ app.get('/admin-dashboard', function(req, res) {
     // Get admin username for filtering complaints
     const adminUsername = req.session.adminUsername;
 
-    // Fetch admin data and complaints
+    // Fetch admin data
     const adminQuery = 'SELECT * FROM admins WHERE adminid = ?';
+
+    // FIXED: Query to get ONLY unique complaints (no duplicates)
     const complaintsQuery = `
-        SELECT 
+        SELECT DISTINCT
             c.complaint_id,
             c.username,
             c.complaint_type,
@@ -204,7 +206,7 @@ app.get('/admin-dashboard', function(req, res) {
             c.description
         FROM complaint c 
         WHERE c.admin_username = ? 
-        ORDER BY c.created_at DESC
+        ORDER BY c.complaint_id DESC
     `;
 
     // Fetch users who have complained under this admin
@@ -268,6 +270,108 @@ app.get('/admin-dashboard', function(req, res) {
 });
 
 
+// Get admin settings
+app.get('/get-admin-settings', function(req, res) {
+    if (!req.session.adminId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+
+    const adminUsername = req.session.adminUsername;
+
+    con.query('SELECT * FROM admin_settings WHERE admin_username = ?', [adminUsername], function(err, results) {
+        if (err) {
+            console.error("Error fetching admin settings:", err);
+            return res.status(500).json({ success: false, message: "Error fetching settings" });
+        }
+
+        if (results.length === 0) {
+            // Create default settings if none exist
+            const defaultSettings = {
+                dark_mode: false,
+                email_notifications: true
+            };
+
+            con.query('INSERT INTO admin_settings (admin_username, dark_mode, email_notifications) VALUES (?, ?, ?)',
+                [adminUsername, defaultSettings.dark_mode, defaultSettings.email_notifications],
+                function(insertErr, insertResult) {
+                    if (insertErr) {
+                        console.error("Error creating default settings:", insertErr);
+                        return res.status(500).json({ success: false, message: "Error creating settings" });
+                    }
+                    res.json({ success: true, settings: defaultSettings });
+                });
+        } else {
+            res.json({ success: true, settings: results[0] });
+        }
+    });
+});
+
+// Update admin settings
+app.post('/update-admin-settings', function(req, res) {
+    if (!req.session.adminId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+
+    const adminUsername = req.session.adminUsername;
+    const { dark_mode, email_notifications } = req.body;
+
+    const sql = `
+        INSERT INTO admin_settings (admin_username, dark_mode, email_notifications) 
+        VALUES (?, ?, ?) 
+        ON DUPLICATE KEY UPDATE 
+        dark_mode = VALUES(dark_mode), 
+        email_notifications = VALUES(email_notifications),
+        updated_at = CURRENT_TIMESTAMP
+    `;
+
+    con.query(sql, [adminUsername, dark_mode, email_notifications], function(err, result) {
+        if (err) {
+            console.error("Error updating admin settings:", err);
+            return res.status(500).json({ success: false, message: "Error updating settings" });
+        }
+
+        res.json({ success: true, message: "Settings updated successfully" });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Route to update admin profile
 app.post('/update-admin-profile', function(req, res) {
     // Check if admin is logged in
@@ -296,157 +400,308 @@ app.post('/update-admin-profile', function(req, res) {
 });
 
 
-
-
-// Route to update complaint status
+// Admin: Update complaint status (FIXED VERSION)
 app.post('/update-complaint-status', function(req, res) {
-    if (!req.session.adminUsername) {
-        return res.status(401).json({
-            success: false,
-            message: "Admin access required"
-        });
-    }
-
-    const { complaint_id, status, remarks } = req.body;
-    const adminUsername = req.session.adminUsername;
-
-    // Update complaint status
-    con.query('UPDATE complaint SET status = ?, admin_username = ? WHERE complaint_id = ?',
-        [status, adminUsername, complaint_id], function(err, result) {
-            if (err) {
-                console.error("Database error:", err);
-                return res.status(500).json({
-                    success: false,
-                    message: "Error updating status"
-                });
-            }
-
-            // Insert status update record
-            con.query('INSERT INTO status_updates (complaint_id, status, remarks, updated_by) VALUES (?, ?, ?, ?)',
-                [complaint_id, status, remarks, adminUsername], function(err) {
-                    if (err) {
-                        console.error("Error inserting status update:", err);
-                    }
-                });
-
-            // Create notification
-            const statusMessages = {
-                'verifying': 'Your complaint is now being verified by our team.',
-                'investigating': 'Your complaint is under investigation.',
-                'resolved': 'Your complaint has been resolved. Thank you for your patience.'
-            };
-
-            const notificationMessage = statusMessages[status] || `Your complaint status has been updated to ${status}.`;
-            createNotification(complaint_id, notificationMessage, 'status_change');
-
-            res.json({
-                success: true,
-                message: "Status updated successfully"
-            });
-        });
-});
-
-
-
-// Get chat messages for a specific complaint
-app.get('/admin/chat/messages/:complaintId', function(req, res) {
-    console.log('Chat messages request for complaint:', req.params.complaintId);
-    console.log('Session check:', req.session);
+    console.log('Status update request:', req.body);
+    console.log('Session:', req.session);
 
     if (!req.session.adminId) {
-        console.log('Unauthorized chat access attempt');
-        return res.status(401).json({ success: false, message: "Not authenticated" });
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized access"
+        });
     }
 
-    const complaintId = req.params.complaintId;
+    // Fix: Use the correct field names that are being sent from frontend
+    const { complaintId, newStatus, remarks } = req.body;
+    const adminUsername = req.session.adminUsername;
 
-    const query = `
-        SELECT 
-            chat_id,
-            complaint_id,
-            sender_type,
-            sender_username,
-            message,
-            sent_at,
-            is_read
-        FROM complaint_chat 
-        WHERE complaint_id = ? 
-        ORDER BY sent_at ASC
-    `;
+    // Map frontend field names to backend variables
+    const complaint_id = complaintId;
+    const status = newStatus;
 
-    con.query(query, [complaintId], function(err, results) {
+    // Validate required fields - Make sure complaint_id is not null/undefined
+    if (!complaint_id || !status) {
+        console.log('Missing required fields:', { complaint_id, status });
+        return res.status(400).json({
+            success: false,
+            message: "Missing required fields: complaint_id and status"
+        });
+    }
+
+    // Convert complaint_id to integer to ensure it's valid
+    const complaintIdInt = parseInt(complaint_id);
+    if (isNaN(complaintIdInt)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid complaint_id format"
+        });
+    }
+
+    console.log('Updating complaint status:', { complaint_id: complaintIdInt, status, remarks, adminUsername });
+
+    // Verify the complaint is assigned to this admin
+    con.query('SELECT admin_username FROM complaint WHERE complaint_id = ?', [complaintIdInt], function(err, results) {
         if (err) {
-            console.error("Error fetching chat messages:", err);
-            return res.status(500).json({
-                success: false,
-                message: "Database error while fetching messages"
-            });
+            console.error("Error verifying complaint:", err);
+            return res.status(500).json({ success: false, message: 'Database error' });
         }
 
-        console.log('Found messages:', results.length);
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Complaint not found' });
+        }
 
-        // Mark admin messages as read when admin opens the chat
-        const markReadQuery = `
-            UPDATE complaint_chat 
-            SET is_read = 1 
-            WHERE complaint_id = ? AND sender_type = 'user' AND is_read = 0
-        `;
+        if (results[0].admin_username !== adminUsername) {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
 
-        con.query(markReadQuery, [complaintId], function(markErr) {
-            if (markErr) {
-                console.error("Error marking messages as read:", markErr);
+        // Start transaction
+        con.beginTransaction(function(err) {
+            if (err) {
+                console.error('Transaction start error:', err);
+                return res.status(500).json({ success: false, message: 'Database error' });
             }
-        });
 
-        res.json({
-            success: true,
-            messages: results
+            // Update complaint status
+            const updateComplaintQuery = 'UPDATE complaint SET status = ? WHERE complaint_id = ?';
+            con.query(updateComplaintQuery, [status, complaintIdInt], function(err, result) {
+                if (err) {
+                    console.error('Error updating complaint status:', err);
+                    return con.rollback(function() {
+                        res.status(500).json({ success: false, message: 'Error updating complaint status' });
+                    });
+                }
+
+                // Insert status update record
+                const statusUpdateQuery = 'INSERT INTO status_updates (complaint_id, status, remarks, updated_by, updated_at) VALUES (?, ?, ?, ?, NOW())';
+                con.query(statusUpdateQuery, [complaintIdInt, status, remarks || null, adminUsername], function(err, statusResult) {
+                    if (err) {
+                        console.error('Error inserting status update:', err);
+                        return con.rollback(function() {
+                            res.status(500).json({ success: false, message: 'Error recording status update' });
+                        });
+                    }
+
+                    // Create notification for the user
+                    const notificationMessage = `Your complaint #${complaintIdInt} status has been updated to: ${status.toUpperCase()}${remarks ? '. Remarks: ' + remarks : ''}`;
+                    const notificationQuery = 'INSERT INTO complaint_notifications (complaint_id, message, type, created_at) VALUES (?, ?, ?, NOW())';
+
+                    console.log('Creating notification for complaint_id:', complaintIdInt);
+
+                    con.query(notificationQuery, [complaintIdInt, notificationMessage, 'status_change'], function(err, notificationResult) {
+                        if (err) {
+                            console.error('Error creating notification:', err);
+                            // Continue anyway - don't fail the status update for notification error
+                        } else {
+                            console.log('Notification created successfully:', notificationResult);
+                        }
+
+                        // Commit the transaction
+                        con.commit(function(err) {
+                            if (err) {
+                                console.error('Transaction commit error:', err);
+                                return con.rollback(function() {
+                                    res.status(500).json({ success: false, message: 'Error committing changes' });
+                                });
+                            }
+
+                            console.log('Status update completed successfully');
+                            res.json({
+                                success: true,
+                                message: 'Complaint status updated successfully'
+                            });
+                        });
+                    });
+                });
+            });
         });
     });
 });
 
-// Send a chat message
-app.post('/admin/chat/send', function(req, res) {
-    console.log('Chat send request:', req.body);
+
+
+
+
+// Admin: Get chat messages for a complaint (ENHANCED DEBUG VERSION)
+app.get('/admin-chat/:complaintId', function(req, res) {
+    console.log('=== ADMIN CHAT DEBUG ===');
+    console.log('Admin chat messages request for complaint:', req.params.complaintId);
     console.log('Session check:', req.session);
+    console.log('Request params:', req.params);
+    console.log('Request URL:', req.url);
+    console.log('========================');
 
     if (!req.session.adminId) {
-        console.log('Unauthorized chat send attempt');
-        return res.status(401).json({ success: false, message: "Not authenticated" });
-    }
-
-    const { complaint_id, message, sender_type } = req.body;
-    const sender_username = req.session.adminUsername; // Get admin username from session
-    const sent_at = new Date();
-
-    if (!complaint_id || !message || !sender_type) {
-        return res.status(400).json({
+        console.log('Authentication failed - no adminId in session');
+        return res.status(401).json({
             success: false,
-            message: "Missing required fields"
+            message: "Please log in as admin"
         });
     }
 
-    const query = `
-        INSERT INTO complaint_chat (complaint_id, sender_type, sender_username, message, sent_at, is_read)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `;
+    const complaintId = req.params.complaintId;
+    const adminUsername = req.session.adminUsername;
 
-    // Admin messages are automatically marked as read (is_read = 1)
-    con.query(query, [complaint_id, sender_type, sender_username, message, sent_at, 1], function(err, result) {
+    console.log('Processing request with:', { complaintId, adminUsername });
+
+    // First verify the complaint is assigned to this admin
+    con.query('SELECT admin_username FROM complaint WHERE complaint_id = ?', [complaintId], function(err, results) {
         if (err) {
-            console.error("Error sending message:", err);
+            console.error("Database error in complaint verification:", err);
             return res.status(500).json({
                 success: false,
-                message: "Database error while sending message"
+                message: "Database error"
             });
         }
 
-        console.log('Message sent successfully, ID:', result.insertId);
+        console.log('Complaint verification results:', results);
 
-        res.json({
-            success: true,
-            message: "Message sent successfully",
-            chatId: result.insertId
+        if (results.length === 0) {
+            console.log('No complaint found with ID:', complaintId);
+            return res.status(404).json({
+                success: false,
+                message: "Complaint not found"
+            });
+        }
+
+        if (results[0].admin_username !== adminUsername) {
+            console.log('Access denied - complaint assigned to:', results[0].admin_username, 'but requesting admin is:', adminUsername);
+            return res.status(403).json({
+                success: false,
+                message: "Access denied"
+            });
+        }
+
+        console.log('Complaint verification passed, fetching messages...');
+
+        // Get chat messages
+        const query = `
+            SELECT * FROM complaint_chat 
+            WHERE complaint_id = ? 
+            ORDER BY sent_at ASC
+        `;
+
+        con.query(query, [complaintId], function(err, messages) {
+            if (err) {
+                console.error("Database error fetching messages:", err);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error fetching messages"
+                });
+            }
+
+            console.log('Found messages:', messages.length);
+            console.log('Messages data:', messages);
+
+            res.json({
+                success: true,
+                messages: messages
+            });
+        });
+    });
+});
+
+
+// Admin: Send chat message (ENHANCED DEBUG VERSION)
+app.post('/admin-send-chat-message', function(req, res) {
+    console.log('=== ADMIN SEND CHAT DEBUG ===');
+    console.log('Raw body:', req.body);
+    console.log('Body type:', typeof req.body);
+    console.log('Body keys:', Object.keys(req.body));
+    console.log('Session check:', req.session);
+    console.log('Content-Type:', req.get('Content-Type'));
+    console.log('=============================');
+
+    if (!req.session.adminId) {
+        console.log('Authentication failed - no adminId in session');
+        return res.status(401).json({
+            success: false,
+            message: "Please log in as admin"
+        });
+    }
+
+    const { complaintId, message, senderType } = req.body;
+    const adminUsername = req.session.adminUsername;
+
+    console.log('Extracted values:', {
+        complaintId: complaintId,
+        complaintId_type: typeof complaintId,
+        message: message ? message.substring(0, 50) + '...' : message,
+        message_type: typeof message,
+        senderType: senderType,
+        adminUsername: adminUsername
+    });
+
+    // Validate required fields
+    if (!complaintId || !message || !message.trim()) {
+        console.log('Validation failed:', {
+            complaintId_exists: !!complaintId,
+            message_exists: !!message,
+            message_trimmed: message ? !!message.trim() : false,
+            senderType: senderType
+        });
+        return res.status(400).json({
+            success: false,
+            message: "Missing required fields: complaintId and message"
+        });
+    }
+
+    console.log('Validation passed, verifying complaint assignment...');
+
+    // Verify the complaint is assigned to this admin
+    con.query('SELECT admin_username FROM complaint WHERE complaint_id = ?', [complaintId], function(err, results) {
+        if (err) {
+            console.error("Database error in complaint verification:", err);
+            return res.status(500).json({
+                success: false,
+                message: "Database error"
+            });
+        }
+
+        console.log('Complaint verification results:', results);
+
+        if (results.length === 0) {
+            console.log('No complaint found with ID:', complaintId);
+            return res.status(404).json({
+                success: false,
+                message: "Complaint not found"
+            });
+        }
+
+        if (results[0].admin_username !== adminUsername) {
+            console.log('Access denied - complaint assigned to:', results[0].admin_username, 'but requesting admin is:', adminUsername);
+            return res.status(403).json({
+                success: false,
+                message: "Access denied"
+            });
+        }
+
+        console.log('Complaint verification passed, inserting message...');
+
+        // Insert chat message
+        const query = `
+            INSERT INTO complaint_chat (complaint_id, sender_type, sender_username, message, sent_at) 
+            VALUES (?, 'admin', ?, ?, NOW())
+        `;
+
+        con.query(query, [complaintId, adminUsername, message.trim()], function(err, result) {
+            if (err) {
+                console.error("Database error inserting message:", err);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error sending message"
+                });
+            }
+
+            console.log('Message inserted successfully:', result);
+
+            // Create notification for user about new admin message
+            createNotification(complaintId, `New message from admin regarding complaint #${complaintId}`, 'admin_comment');
+
+            res.json({
+                success: true,
+                message: "Message sent successfully"
+            });
         });
     });
 });
@@ -511,72 +766,6 @@ app.get('/get-complaint-evidence/:complaintId', function(req, res) {
                 evidence: evidenceResults,
                 complaint: complaintResults[0]
             });
-        });
-    });
-});
-
-
-
-app.post('/admin-update-status', function(req, res) {
-    if (!req.session.adminUsername) {
-        return res.status(401).json({
-            success: false,
-            message: "Admin access required"
-        });
-    }
-
-    const { complaint_id, new_status, remarks } = req.body;
-    const adminUsername = req.session.adminUsername;
-
-    console.log('Status update request:', { complaint_id, new_status, remarks, adminUsername });
-
-    if (!complaint_id || !new_status) {
-        return res.status(400).json({
-            success: false,
-            message: "Missing required fields"
-        });
-    }
-
-    // Update complaint status
-    const updateQuery = 'UPDATE complaint SET status = ?, admin_username = ? WHERE complaint_id = ?';
-
-    con.query(updateQuery, [new_status, adminUsername, complaint_id], function(err, result) {
-        if (err) {
-            console.error("Database error:", err);
-            return res.status(500).json({
-                success: false,
-                message: "Error updating status"
-            });
-        }
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Complaint not found"
-            });
-        }
-
-        // Insert status update record
-        const statusUpdateQuery = 'INSERT INTO status_updates (complaint_id, status, remarks, updated_by) VALUES (?, ?, ?, ?)';
-        con.query(statusUpdateQuery, [complaint_id, new_status, remarks || '', adminUsername], function(err) {
-            if (err) {
-                console.error("Error inserting status update:", err);
-            }
-        });
-
-        // Create notification
-        const statusMessages = {
-            'verifying': 'Your complaint is now being verified by our team.',
-            'investigating': 'Your complaint is under investigation.',
-            'resolved': 'Your complaint has been resolved. Thank you for your patience.'
-        };
-
-        const notificationMessage = statusMessages[new_status] || `Your complaint status has been updated to ${new_status}.`;
-        createNotification(complaint_id, notificationMessage, 'status_change');
-
-        res.json({
-            success: true,
-            message: "Status updated successfully"
         });
     });
 });
@@ -689,15 +878,6 @@ app.get('/check-admin-auth', function(req, res) {
         res.status(401).json({ authenticated: false });
     }
 });
-
-
-
-
-
-
-
-
-
 
 // Modify homepage route to show admin username
 app.get('/homepage', function(req, res) {
@@ -1451,33 +1631,194 @@ app.post('/submit-complaint', upload.array('evidence', 10), function(req, res) {
 });
 
 
-// my-complaints route with notifications count
+
+// Route to handle admin notifications when complaint is submitted
+app.post('/notify-admin', function(req, res) {
+    if (!req.session.adminId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+
+    const { complaintId, adminEmail } = req.body;
+
+    // Get complaint details
+    con.query(`
+        SELECT c.*, u.fullName as user_fullname 
+        FROM complaint c 
+        JOIN users u ON c.username = u.username 
+        WHERE c.complaint_id = ?
+    `, [complaintId], function(err, results) {
+        if (err) {
+            console.error("Error fetching complaint for notification:", err);
+            return res.status(500).json({ success: false, message: "Database error" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: "Complaint not found" });
+        }
+
+        const complaint = results[0];
+
+        // Here you can add email notification logic
+        // For now, we'll just return success
+        res.json({
+            success: true,
+            message: "Admin notified successfully",
+            complaint: {
+                id: complaint.complaint_id,
+                type: complaint.complaint_type,
+                username: complaint.username,
+                user_fullname: complaint.user_fullname,
+                description: complaint.description,
+                location: complaint.location_address,
+                submittedDate: complaint.created_at
+            }
+        });
+    });
+});
+
+
+
+
+// Get admin settings - Complete version
+app.get('/get-admin-settings', function(req, res) {
+    if (!req.session.adminId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+
+    const adminUsername = req.session.adminUsername;
+
+    con.query('SELECT * FROM admin_settings WHERE admin_username = ?', [adminUsername], function(err, results) {
+        if (err) {
+            console.error("Error fetching admin settings:", err);
+            return res.status(500).json({ success: false, message: "Database error" });
+        }
+
+        // If no settings exist, create default settings
+        if (results.length === 0) {
+            const defaultSettings = {
+                admin_username: adminUsername,
+                dark_mode: false,
+                email_notifications: true
+            };
+
+            con.query('INSERT INTO admin_settings SET ?', defaultSettings, function(insertErr, insertResult) {
+                if (insertErr) {
+                    console.error("Error creating default settings:", insertErr);
+                    return res.status(500).json({ success: false, message: "Error creating settings" });
+                }
+
+                res.json({
+                    success: true,
+                    settings: defaultSettings
+                });
+            });
+        } else {
+            res.json({
+                success: true,
+                settings: {
+                    dark_mode: Boolean(results[0].dark_mode),
+                    email_notifications: Boolean(results[0].email_notifications)
+                }
+            });
+        }
+    });
+});
+
+// Update admin settings
+app.post('/update-admin-settings', function(req, res) {
+    if (!req.session.adminId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+
+    const adminUsername = req.session.adminUsername;
+    const { dark_mode, email_notifications } = req.body;
+
+    const settings = {
+        dark_mode: dark_mode ? 1 : 0,
+        email_notifications: email_notifications ? 1 : 0,
+        updated_at: new Date()
+    };
+
+    con.query(`
+        INSERT INTO admin_settings (admin_username, dark_mode, email_notifications, created_at, updated_at)
+        VALUES (?, ?, ?, NOW(), NOW())
+        ON DUPLICATE KEY UPDATE
+        dark_mode = VALUES(dark_mode),
+        email_notifications = VALUES(email_notifications),
+        updated_at = VALUES(updated_at)
+    `, [adminUsername, settings.dark_mode, settings.email_notifications], function(err, result) {
+        if (err) {
+            console.error("Error updating admin settings:", err);
+            return res.status(500).json({ success: false, message: "Database error" });
+        }
+
+        res.json({
+            success: true,
+            message: "Settings updated successfully"
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// User: Get user's complaints with notification counts
 app.get('/my-complaints', function(req, res) {
-    if (!req.session.username) {
+    if (!req.session.userId && !req.session.username) {
         return res.status(401).json({
             success: false,
-            message: "Please log in to view complaints"
+            message: "Please log in to view your complaints"
         });
     }
 
     const username = req.session.username;
 
-    const query = `
+    const complaintsQuery = `
         SELECT 
-            c.*,
-            COUNT(DISTINCT e.evidence_id) as evidence_count,
-            COUNT(DISTINCT CASE WHEN cn.is_read = 0 THEN cn.notification_id END) as unread_notifications
+            c.complaint_id,
+            c.description,
+            c.created_at,
+            c.status,
+            c.complaint_type,
+            c.location_address,
+            COALESCE(evidence_count.count, 0) as evidence_count,
+            COALESCE(notification_count.unread_notifications, 0) as unread_notifications
         FROM complaint c
-        LEFT JOIN evidence e ON c.complaint_id = e.complaint_id
-        LEFT JOIN complaint_notifications cn ON c.complaint_id = cn.complaint_id
+        LEFT JOIN (
+            SELECT complaint_id, COUNT(*) as count
+            FROM evidence
+            GROUP BY complaint_id
+        ) evidence_count ON c.complaint_id = evidence_count.complaint_id
+        LEFT JOIN (
+            SELECT complaint_id, COUNT(*) as unread_notifications
+            FROM complaint_notifications
+            WHERE is_read = 0
+            GROUP BY complaint_id
+        ) notification_count ON c.complaint_id = notification_count.complaint_id
         WHERE c.username = ?
-        GROUP BY c.complaint_id
         ORDER BY c.created_at DESC
     `;
 
-    con.query(query, [username], function(err, results) {
+    con.query(complaintsQuery, [username], function(err, complaints) {
         if (err) {
-            console.error("Database error:", err);
+            console.error('Error fetching user complaints:', err);
             return res.status(500).json({
                 success: false,
                 message: "Error fetching complaints"
@@ -1486,55 +1827,58 @@ app.get('/my-complaints', function(req, res) {
 
         res.json({
             success: true,
-            complaints: results
+            complaints: complaints
         });
     });
 });
 
 
-// Get complaint notifications
-app.get('/complaint-notifications/:complaintId', function(req, res) {
-    if (!req.session.username) {
+
+// User: Get complaint notifications
+app.get('/complaint-notifications/:complaint_id', function(req, res) {
+    const complaint_id = req.params.complaint_id;
+
+    if (!req.session.userId && !req.session.username) {
         return res.status(401).json({
             success: false,
-            message: "Please log in"
+            message: "Unauthorized access"
         });
     }
 
-    const complaintId = req.params.complaintId;
     const username = req.session.username;
 
-    // First verify the complaint belongs to the user
-    con.query('SELECT username FROM complaint WHERE complaint_id = ?', [complaintId], function(err, results) {
+    // First, verify that the complaint belongs to the logged-in user
+    const verifyQuery = 'SELECT username FROM complaint WHERE complaint_id = ?';
+    con.query(verifyQuery, [complaint_id], function(err, verifyResult) {
         if (err) {
-            console.error("Database error:", err);
-            return res.status(500).json({
-                success: false,
-                message: "Database error"
-            });
+            console.error('Error verifying complaint ownership:', err);
+            return res.status(500).json({ success: false, message: 'Database error' });
         }
 
-        if (results.length === 0 || results[0].username !== username) {
+        if (verifyResult.length === 0 || verifyResult[0].username !== username) {
             return res.status(403).json({
                 success: false,
                 message: "Access denied"
             });
         }
 
-        // Get notifications
-        const query = `
-            SELECT * FROM complaint_notifications 
+        // Get notifications for the complaint
+        const notificationQuery = `
+            SELECT 
+                notification_id,
+                message,
+                type,
+                is_read,
+                created_at
+            FROM complaint_notifications 
             WHERE complaint_id = ? 
             ORDER BY created_at DESC
         `;
 
-        con.query(query, [complaintId], function(err, notifications) {
+        con.query(notificationQuery, [complaint_id], function(err, notifications) {
             if (err) {
-                console.error("Database error:", err);
-                return res.status(500).json({
-                    success: false,
-                    message: "Error fetching notifications"
-                });
+                console.error('Error fetching notifications:', err);
+                return res.status(500).json({ success: false, message: 'Error fetching notifications' });
             }
 
             res.json({
@@ -1546,21 +1890,29 @@ app.get('/complaint-notifications/:complaintId', function(req, res) {
 });
 
 
-// Mark notifications as read
-app.post('/mark-notifications-read/:complaintId', function(req, res) {
-    if (!req.session.username) {
+
+// User: Mark notifications as read
+app.post('/mark-notifications-read/:complaint_id', function(req, res) {
+    const complaint_id = req.params.complaint_id;
+
+    if (!req.session.userId && !req.session.username) {
         return res.status(401).json({
             success: false,
-            message: "Please log in"
+            message: "Unauthorized access"
         });
     }
 
-    const complaintId = req.params.complaintId;
     const username = req.session.username;
 
-    // First verify the complaint belongs to the user
-    con.query('SELECT username FROM complaint WHERE complaint_id = ?', [complaintId], function(err, results) {
-        if (err || results.length === 0 || results[0].username !== username) {
+    // First, verify that the complaint belongs to the logged-in user
+    const verifyQuery = 'SELECT username FROM complaint WHERE complaint_id = ?';
+    con.query(verifyQuery, [complaint_id], function(err, verifyResult) {
+        if (err) {
+            console.error('Error verifying complaint ownership:', err);
+            return res.status(500).json({ success: false, message: 'Database error' });
+        }
+
+        if (verifyResult.length === 0 || verifyResult[0].username !== username) {
             return res.status(403).json({
                 success: false,
                 message: "Access denied"
@@ -1568,26 +1920,25 @@ app.post('/mark-notifications-read/:complaintId', function(req, res) {
         }
 
         // Mark notifications as read
-        con.query('UPDATE complaint_notifications SET is_read = 1 WHERE complaint_id = ?', [complaintId], function(err) {
+        const updateQuery = 'UPDATE complaint_notifications SET is_read = 1 WHERE complaint_id = ? AND is_read = 0';
+        con.query(updateQuery, [complaint_id], function(err, result) {
             if (err) {
-                console.error("Database error:", err);
-                return res.status(500).json({
-                    success: false,
-                    message: "Error updating notifications"
-                });
+                console.error('Error marking notifications as read:', err);
+                return res.status(500).json({ success: false, message: 'Error updating notifications' });
             }
 
             res.json({
                 success: true,
-                message: "Notifications marked as read"
+                message: 'Notifications marked as read'
             });
         });
     });
 });
 
-// Get chat messages for a complaint
+
+// User: Get chat messages for a complaint
 app.get('/complaint-chat/:complaintId', function(req, res) {
-    if (!req.session.username) {
+    if (!req.session.userId && !req.session.username) {
         return res.status(401).json({
             success: false,
             message: "Please log in"
@@ -1638,9 +1989,10 @@ app.get('/complaint-chat/:complaintId', function(req, res) {
     });
 });
 
-// Send chat message
+
+// User: Send chat message
 app.post('/send-chat-message', function(req, res) {
-    if (!req.session.username) {
+    if (!req.session.userId && !req.session.username) {
         return res.status(401).json({
             success: false,
             message: "Please log in"
@@ -1676,8 +2028,8 @@ app.post('/send-chat-message', function(req, res) {
 
         // Insert chat message
         const query = `
-            INSERT INTO complaint_chat (complaint_id, sender_type, sender_username, message) 
-            VALUES (?, 'user', ?, ?)
+            INSERT INTO complaint_chat (complaint_id, sender_type, sender_username, message, sent_at) 
+            VALUES (?, 'user', ?, ?, NOW())
         `;
 
         con.query(query, [complaint_id, username, message.trim()], function(err, result) {
@@ -1696,54 +2048,6 @@ app.post('/send-chat-message', function(req, res) {
         });
     });
 });
-
-
-
-// Function to create notification
-function createNotification(complaintId, message, type = 'system') {
-    // Add validation to ensure complaintId is not null/undefined
-    if (!complaintId) {
-        console.error("Cannot create notification: complaint_id is null or undefined");
-        return;
-    }
-
-    const query = `
-        INSERT INTO complaint_notifications (complaint_id, message, type) 
-        VALUES (?, ?, ?)
-    `;
-
-    con.query(query, [complaintId, message, type], function(err, result) {
-        if (err) {
-            console.error("Error creating notification:", err);
-        } else {
-            console.log("Notification created successfully for complaint:", complaintId);
-        }
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // handle complaint deletion
@@ -1860,12 +2164,6 @@ app.get('/dashboard-stats', function(req, res) {
         });
     });
 });
-
-
-
-
-
-
 
 
 

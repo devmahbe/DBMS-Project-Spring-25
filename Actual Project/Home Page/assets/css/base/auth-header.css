@@ -1,0 +1,100 @@
+/* User Authentication styling for header */
+.user-auth-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Add hover effect for the user welcome section */
+.user-welcome {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-welcome {
+    display: flex;
+    align-items: center;
+    /* Removing background color to match navbar */
+    background-color: transparent;
+    padding: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.user-welcome:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+.user-welcome:hover {
+    transform: translateY(-2px);
+}
+
+/* Add tooltip to indicate it's clickable */
+.user-welcome::after {
+    content: "Go to profile";
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.user-welcome:hover::after {
+    opacity: 1;
+}
+
+.user-welcome .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--light-grey-green);
+    /* Matching the navbar background */
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.user-welcome .user-avatar i {
+    color: var(--light-grey-green);
+    font-size: 16px;
+}
+
+.user-welcome .username {
+    color: var(--light-grey-green);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.logout-button {
+    /* Changed styling for logout button */
+    background-color: transparent;
+    color: var(--light-grey-green);
+    border: 1px solid var(--light-grey-green);
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.logout-button i {
+    font-size: 12px;
+}
