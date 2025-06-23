@@ -1,6 +1,296 @@
 let allComplaints = [];
 let filteredComplaints = [];
 
+// Add CSS for notification panels and badges
+const notificationStyles = document.createElement('style');
+notificationStyles.textContent = `
+    /* Notification Panel Styling */
+    .notification-panel {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 1px solid #e8ecf0;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        width: 400px;
+        height: 600px;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    }
+
+    .notification-panel.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .notification-header {
+        padding: 16px;
+        border-bottom: 1px solid #f1f3f5;
+        background: #f8f9fa;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .notification-header h4 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .notification-content {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 8px 0;
+    }
+
+    .notification-item {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f8f9fa;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+    }
+
+    .notification-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+    .notification-item.unread {
+        background-color: #e3f2fd;
+        border-left: 3px solid #1976d2;
+    }
+
+    .notification-message {
+        padding: 16px;
+        text-align: center;
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+
+    .notification-text {
+        font-size: 0.9rem;
+        color: #4a5568;
+        margin-bottom: 6px;
+         line-height: 1.4;  
+        word-wrap: break-word; 
+
+    }
+
+    .notification-time {
+        font-size: 0.75rem;
+        color: #9ca3af;
+    }
+
+    /* Enhanced notification badge */
+    .notification-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background: #ff4757;
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+        min-width: 18px;
+    }
+
+    /* Loading spinner for notifications */
+    .filter-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        color: #6c757d;
+    }
+
+    .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #e8ecf0;
+        border-top: 2px solid #124E66;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 8px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .notification-content {
+       max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 8px 0;
+        
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+    }
+    @media (max-width: 768px) {
+    .notification-panel {
+        width: 350px;
+        right: -25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .notification-panel {
+        width: 280px;
+        right: -40px;
+    }
+}
+
+`;
+document.head.appendChild(notificationStyles);
+
+// Add this function to handle complaint deletion
+function deleteComplaint(complaintId) {
+    if (!confirm('Are you sure you want to delete this complaint? This action cannot be undone.')) {
+        return;
+    }
+
+    // Disable the delete button to prevent multiple clicks
+    const deleteBtn = document.querySelector(`#complaint-${complaintId} .delete-btn`);
+    if (deleteBtn) {
+        deleteBtn.disabled = true;
+        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+    }
+
+    fetch(`/delete-complaint/${complaintId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                showNotification('Complaint deleted successfully', 'success');
+
+                // Remove the complaint card from the DOM
+                const complaintCard = document.getElementById(`complaint-${complaintId}`);
+                if (complaintCard) {
+                    complaintCard.style.transition = 'all 0.3s ease';
+                    complaintCard.style.opacity = '0';
+                    complaintCard.style.transform = 'translateX(-100%)';
+
+                    setTimeout(() => {
+                        complaintCard.remove();
+
+                        // Update the complaints arrays
+                        allComplaints = allComplaints.filter(c => c.complaint_id !== complaintId);
+                        filteredComplaints = filteredComplaints.filter(c => c.complaint_id !== complaintId);
+
+                        // If no complaints left, show the empty state
+                        if (filteredComplaints.length === 0) {
+                            displayComplaints([]);
+                        }
+                    }, 300);
+                }
+            } else {
+                showNotification(data.message || 'Failed to delete complaint', 'error');
+
+                // Re-enable the delete button
+                if (deleteBtn) {
+                    deleteBtn.disabled = false;
+                    deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> <span>Delete</span>';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting complaint:', error);
+            showNotification('An error occurred while deleting the complaint', 'error');
+
+            // Re-enable the delete button
+            if (deleteBtn) {
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> <span>Delete</span>';
+            }
+        });
+}
+
+// Function to show notifications
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+
+    // Add notification styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+    `;
+
+    // Add to document
+    document.body.appendChild(notification);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
 // Function to load and display user complaints
 function loadMyComplaints() {
     showLoadingState();
@@ -84,7 +374,8 @@ function displayComplaints(complaints) {
         
         const notificationCount = complaint.unread_notifications || 0;
         const notificationBadge = notificationCount > 0 ? 
-            `<span class="notification-badge">${notificationCount}</span>` : '';
+            `<span class="notification-badge" id="badge-${complaint.complaint_id}">${notificationCount}</span>` : 
+            `<span class="notification-badge" id="badge-${complaint.complaint_id}" style="display: none;">0</span>`;
         
         return `
             <div class="complaint-card" id="complaint-${complaint.complaint_id}">
@@ -231,10 +522,8 @@ function displayNotifications(container, notifications, complaintId) {
     }
     
     const notificationsHTML = notifications.map(notification => `
-        <div class="notification-item ${!notification.is_read ? 'unread' : ''}" onclick="markAsRead(${notification.notification_id})">
-            <div class="notification-content">
-                <p class="notification-message">${notification.message}</p>
-            </div>
+        <div class="notification-item ${!notification.is_read ? 'unread' : ''}">
+            <div class="notification-text">${notification.message}</div>
             <div class="notification-time">${formatTimeAgo(notification.created_at)}</div>
         </div>
     `).join('');
@@ -250,18 +539,37 @@ function markNotificationsAsRead(complaintId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            updateNotificationCounts();
+            // Update the specific complaint's notification count
+            const complaint = allComplaints.find(c => c.complaint_id === complaintId);
+            if (complaint) {
+                complaint.unread_notifications = 0;
+            }
+            
+            // Hide the notification badge for this specific complaint
+            const badge = document.getElementById(`badge-${complaintId}`);
+            if (badge) {
+                badge.style.display = 'none';
+                badge.textContent = '0';
+            }
         }
     })
     .catch(error => console.error('Error marking notifications as read:', error));
 }
 
+// Fixed updateNotificationCounts function
 function updateNotificationCounts() {
-    // Update notification badges
+    // Update notification badges based on actual unread counts
     allComplaints.forEach(complaint => {
-        const badge = document.querySelector(`#complaint-${complaint.complaint_id} .notification-badge`);
+        const badge = document.getElementById(`badge-${complaint.complaint_id}`);
+        const notificationCount = complaint.unread_notifications || 0;
+        
         if (badge) {
-            badge.style.display = 'none';
+            if (notificationCount > 0) {
+                badge.textContent = notificationCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
         }
     });
 }
@@ -424,106 +732,6 @@ function formatTimeAgo(dateString) {
     if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)} days ago`;
     
     return date.toLocaleDateString();
-}
-
-function deleteComplaint(complaintId) {
-    const result = confirm('⚠️ Delete Complaint\n\nAre you sure you want to delete this complaint?\nThis action cannot be undone and all associated data will be permanently removed.');
-    
-    if (result) {
-        const deleteBtn = document.querySelector(`#complaint-${complaintId} .delete-btn`);
-        if (deleteBtn) {
-            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-            deleteBtn.disabled = true;
-        }
-
-        fetch(`/delete-complaint/${complaintId}`, {
-            method: 'DELETE',
-            credentials: 'same-origin'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const complaintCard = document.getElementById(`complaint-${complaintId}`);
-                if (complaintCard) {
-                    complaintCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                    complaintCard.style.opacity = '0';
-                    complaintCard.style.transform = 'translateX(100%)';
-                    
-                    setTimeout(() => {
-                        complaintCard.remove();
-                        
-                        // Remove from arrays
-                        allComplaints = allComplaints.filter(c => c.complaint_id !== complaintId);
-                        filteredComplaints = filteredComplaints.filter(c => c.complaint_id !== complaintId);
-                        
-                        if (filteredComplaints.length === 0) {
-                            displayComplaints(filteredComplaints);
-                        }
-                    }, 300);
-                }
-                
-                showNotification('Complaint deleted successfully!', 'success');
-            } else {
-                showNotification('Error deleting complaint: ' + data.message, 'error');
-                if (deleteBtn) {
-                    deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> <span>Delete</span>';
-                    deleteBtn.disabled = false;
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error deleting complaint. Please try again.', 'error');
-            if (deleteBtn) {
-                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> <span>Delete</span>';
-                deleteBtn.disabled = false;
-            }
-        });
-    }
-}
-
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#10b981' : '#ef4444'};
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.3s ease;
-    `;
-    
-    notification.innerHTML = `
-        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-        <span>${message}</span>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Animate in
-    setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
 }
 
 function getStatusColor(status) {

@@ -10,6 +10,338 @@
     <link rel="stylesheet" href="/User/CSS/formCard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
+
+        /* Fix for sidebar stretching issue */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            background-color: #21566a;
+            color: var(--light-grey);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            min-width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            border-right: 1px solid #e8ecf0;
+
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            height: 100vh;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Ensure complaint list doesn't stretch sidebar */
+        .complaint-list {
+            width: 100%;
+            max-width: 100%;
+            overflow: visible;
+        }
+
+        /* Professional Complaint Cards Styling */
+        .complaint-card {
+            background: #ffffff;
+            border: 1px solid #e8ecf0;
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .complaint-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid #f1f3f5;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+
+        .complaint-title-section {
+            flex: 1;
+        }
+
+        .complaint-title {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        .complaint-type {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .complaint-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(255, 71, 87, 0.3);
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(135deg, #ff3742 0%, #ff2636 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+        }
+
+        .delete-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(255, 71, 87, 0.3);
+        }
+
+        .delete-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .complaint-body {
+            padding: 20px 24px 24px;
+        }
+
+        .complaint-description {
+            margin-bottom: 20px;
+        }
+
+        .description-text {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .complaint-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .meta-item i {
+            color: #124E66;
+            width: 14px;
+        }
+
+        /* Filter Section Styles */
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8ecf0;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-title {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* Notification and chat icons styling */
+        .notification-icon, .chat-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .notification-icon:hover, .chat-icon:hover {
+            background-color: #f1f3f5;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+                min-width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+                padding: 15px;
+            }
+
+            .complaint-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .complaint-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                width: 100%;
+                min-width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                height: auto;
+            }
+
+            .dashboard-container {
+                flex-direction: column;
+                height: auto;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /* Professional Complaint Cards Styling */
         .complaint-card {
             background: #ffffff;
@@ -395,9 +727,9 @@
 </head>
 <body>
 
-<div class="container">
+<div class="dashboard-container">
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <div class="sidebar">
         <div class="profile">
             <img id="sidebarImage" src="https://api.dicebear.com/7.x/avataaars/svg?seed=<%= user.username %>" alt="<%= user.username %>" class="avatar" />
             <h2><%= user.fullname || user.username %></h2>
@@ -423,10 +755,10 @@
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
-    </aside>
+    </div>
 
     <!-- Main Content -->
-    <main class="main">
+    <main class="main-content">
         <header class="header">
             <h1>User Dashboard</h1>
             <button onclick="openEditForm()" class="edit-btn" >Edit Profile</button>
@@ -662,7 +994,7 @@
             console.error('Logout error:', error);
             // Even if there's an error, redirect to login
             localStorage.removeItem('profileImage');
-          window.location.href = '/signup';  // Changed from '/signup' to '/login'
+          window.location.href = '/signup';
         });
     }
 }

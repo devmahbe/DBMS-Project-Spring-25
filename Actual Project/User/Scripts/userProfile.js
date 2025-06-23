@@ -12,9 +12,4 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
         document.getElementById(tab).classList.add("active");
     });
 });
-function logoutFunction() {
-    // Example: clear session/local storage and redirect
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.href = '../Login/login.html'; // or your homepage
-}
+

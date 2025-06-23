@@ -135,6 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Update the submit form section in complainForm.js
+
+
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -161,26 +163,28 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.success) {
                     // Notify admin about new complaint
-                    if (data.complaint && data.complaint.admin_username) {
+                    if (data.complaint && data.complaint.id) {
                         fetch('/notify-admin', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                complaintId: data.complaint.id,
-                                adminEmail: data.adminEmail
+                                complaintId: data.complaint.id
                             })
                         })
-                        .then(notifyResponse => notifyResponse.json())
-                        .then(notifyData => {
-                            if (notifyData.success && notifyData.complaint) {
-                                sendEmailToAdmin(data.adminEmail, notifyData.complaint);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error notifying admin:', error);
-                        });
+                            .then(notifyResponse => notifyResponse.json())
+                            .then(notifyData => {
+                                console.log('Notification response:', notifyData);
+                                if (notifyData.success && notifyData.complaint && notifyData.adminEmail) {
+                                    sendEmailToAdmin(notifyData.adminEmail, notifyData.complaint);
+                                } else {
+                                    console.error('Failed to get admin email or complaint data');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error notifying admin:', error);
+                            });
                     }
 
                     successModal.classList.remove("hidden");
@@ -196,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert('Error submitting complaint');
             });
     });
+
 
 
     function resetUploadDisplays() {
@@ -221,22 +226,26 @@ document.addEventListener("DOMContentLoaded", () => {
         // Redirect to profile page
         window.location.href = '/profile';
     });
+
 });
 
+
 function sendEmailToAdmin(adminEmail, complaintData) {
+    console.log('Sending email to:', adminEmail);
+    console.log('Complaint data:', complaintData);
 
     const emailParams = {
         to_email: adminEmail,
         complaint_id: complaintData.id,
         complaint_type: complaintData.type,
         user_name: complaintData.username,
-        description: complaintData.description.substring(0, 200) + '...', // Limit description length
-        location: complaintData.location,
+        user_fullname: complaintData.user_fullname,
+        description: complaintData.description ? complaintData.description.substring(0, 200) + '...' : 'No description provided',
+        location: complaintData.location || 'Location not specified',
         submitted_date: complaintData.submittedDate
     };
 
     // Use your existing EmailJS configuration
-
     if (typeof emailjs !== 'undefined') {
         emailjs.send('service_pl2gk4v', 'template_8k86xhk', emailParams, '1RHpGS2tq0gxGer21')
             .then(function(response) {

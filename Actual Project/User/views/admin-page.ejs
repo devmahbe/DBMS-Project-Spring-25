@@ -6,6 +6,7 @@
     <title>Admin Dashboard</title>
     <link rel="icon" type="image/x-icon" href="/Home Page/assets/images/favicon.ico">
 
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="/Admin Page/assets/js/admin-dashboard-protection.js"></script>
 
@@ -65,6 +66,7 @@
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
         }
+
         :root.dark-mode {
             /* Dark Mode Color Palette */
             --primary-dark: #0f172a;
@@ -1965,29 +1967,79 @@
                             const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(fileExtension);
                             const isAudio = ['mp3', 'wav', 'ogg', 'aac'].includes(fileExtension);
 
+                            // Construct the correct file path
+                            // Check if the file_path already includes the subdirectory
+                            let filePath;
+                            if (evidence.file_path.includes('/')) {
+                                // Path already includes subdirectory (like "images/filename.jpg")
+                                filePath = `/uploads/${evidence.file_path}`;
+                            } else {
+                                // Path is just filename, determine subdirectory based on type
+                                if (isImage) {
+                                    filePath = `/uploads/images/${evidence.file_path}`;
+                                } else if (isVideo) {
+                                    filePath = `/uploads/videos/${evidence.file_path}`;
+                                } else if (isAudio) {
+                                    filePath = `/uploads/audio/${evidence.file_path}`;
+                                } else {
+                                    filePath = `/uploads/${evidence.file_path}`;
+                                }
+                            }
+
                             evidenceHtml += `
-            <div style="padding: 1rem; border: 1px solid var(--border-gray); border-radius: var(--radius-md);">
-                <p><strong>Type:</strong> ${evidence.file_type}</p>
-                <p><strong>Uploaded:</strong> ${new Date(evidence.uploaded_at).toLocaleString()}</p>
-                <p><strong>File:</strong> ${evidence.file_path}</p>
-                <div style="margin-top: 1rem;">
-        `;
+        <div style="padding: 1rem; border: 1px solid var(--border-gray); border-radius: var(--radius-md);">
+            <p><strong>Type:</strong> ${evidence.file_type}</p>
+            <p><strong>Uploaded:</strong> ${new Date(evidence.uploaded_at).toLocaleString()}</p>
+            <p><strong>File Path:</strong> ${filePath}</p>
+            <div style="margin-top: 1rem;">
+    `;
 
                             if (isImage) {
-                                evidenceHtml += `<img src="/uploads/${evidence.file_path}" alt="Evidence" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md);">`;
+                                evidenceHtml += `<img src="${filePath}" alt="Evidence" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md); object-fit: contain;"
+                                onload="console.log('Image loaded successfully:', '${filePath}')"
+                                onerror="console.error('Image failed to load:', '${filePath}'); this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div style="display: none; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-md); text-align: center;">
+                                <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                                <p>Image could not be loaded</p>
+                                <p><small>Path: ${filePath}</small></p>
+                                <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Open in new tab</a>
+                            </div>`;
                             } else if (isVideo) {
-                                evidenceHtml += `<video controls style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md);"><source src="/uploads/${evidence.file_path}" type="video/${fileExtension}">Your browser does not support video.</video>`;
+                                evidenceHtml += `<video controls style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md);"
+                                onloadstart="console.log('Video loading started:', '${filePath}')"
+                                oncanplay="console.log('Video can play:', '${filePath}')"
+                                onerror="console.error('Video failed to load:', '${filePath}'); this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <source src="${filePath}" type="video/${fileExtension}">
+                                Your browser does not support video.
+                            </video>
+                            <div style="display: none; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-md); text-align: center;">
+                                <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                                <p>Video could not be loaded</p>
+                                <p><small>Path: ${filePath}</small></p>
+                                <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Open in new tab</a>
+                            </div>`;
                             } else if (isAudio) {
-                                evidenceHtml += `<audio controls style="width: 100%;"><source src="/uploads/${evidence.file_path}" type="audio/${fileExtension}">Your browser does not support audio.</audio>`;
+                                evidenceHtml += `<audio controls style="width: 100%;"
+                                onloadstart="console.log('Audio loading started:', '${filePath}')"
+                                oncanplay="console.log('Audio can play:', '${filePath}')"
+                                onerror="console.error('Audio failed to load:', '${filePath}'); this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <source src="${filePath}" type="audio/${fileExtension}">
+                                Your browser does not support audio.
+                            </audio>
+                            <div style="display: none; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-md); text-align: center;">
+                                <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                                <p>Audio could not be loaded</p>
+                                <p><small>Path: ${filePath}</small></p>
+                                <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Open in new tab</a>
+                            </div>`;
                             } else {
-                                evidenceHtml += `<a href="/uploads/${evidence.file_path}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Download File</a>`;
+                                evidenceHtml += `<a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Download File</a>`;
                             }
 
                             evidenceHtml += `</div></div>`;
                         });
                         evidenceHtml += '</div>';
                         evidenceContainer.innerHTML = evidenceHtml;
-
                     }
                 } else {
                     document.getElementById('evidence-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load evidence.</p></div>';
@@ -2000,6 +2052,9 @@
 
         document.getElementById('evidenceModal').style.display = 'flex';
     }
+
+
+
 
     function viewDescription(complaintId, description) {
         document.getElementById('description-complaint-id').textContent = complaintId;

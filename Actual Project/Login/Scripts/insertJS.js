@@ -14,22 +14,50 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../../User/views'));
 
-
-
+// Paths
 const parentDir = path.join(__dirname, '..');
+const rootDir = path.join(__dirname, '../..')
+const homePageDir = path.join(rootDir, 'Home Page'); // Updated to use rootDir
+
+
+
+
 app.use(express1.static(parentDir));
-console.log('Serving static files from:', parentDir);
-app.use('/uploads', express1.static(path.join(__dirname, '../../uploads')));
-app.use('/User/Scripts',express1.static(path.join(__dirname, '../../User/Scripts')))
-app.use('/User/CSS', express1.static(path.join(__dirname, '../../User/CSS')));
-app.use('/User', express1.static(path.join(__dirname, '../../User')));
+app.use('/uploads', express1.static(path.join(rootDir, 'uploads')));
+app.use('/User/Scripts', express1.static(path.join(rootDir, 'User/Scripts')));
+app.use('/User/CSS', express1.static(path.join(rootDir, 'User/CSS')));
+app.use('/User', express1.static(path.join(rootDir, 'User')));
+
+// FIXED Admin Page routes - remove duplicates and use correct paths
+app.use('/Admin Page', express1.static(path.join(rootDir, 'Admin Page')));
+app.use('/Home Page', express1.static(path.join(rootDir, 'Home Page')));
+
+
+
+
+// Updated cache control middleware)
 app.use((req, res, next) => {
-    // Prevent caching of sensitive pages
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-    res.set('Pragma', 'no-cache');
-    res.set('Expires', '0');
+    // Only prevent caching for HTML pages and sensitive routes, NOT for CSS/JS/images
+    if (req.url.includes('/admin-dashboard') ||
+        req.url.includes('/login') ||
+        req.url.includes('/adminLogin') ||
+        req.url.includes('/get-admin-settings') ||
+        req.url.includes('/update-') ||
+        req.url.endsWith('.html') ||
+        req.url.includes('/admin-chat/') ||
+        req.url.includes('/send-chat-message')) {
+
+
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
+    } else if (req.url.endsWith('.css') || req.url.endsWith('.js') || req.url.endsWith('.png') || req.url.endsWith('.jpg') || req.url.endsWith('.ico')) {
+        // Allow caching for static assets
+        res.set('Cache-Control', 'public, max-age=3600');
+    }
     next();
 });
+
 
 
 // Make sure these imports are at the top of your file
@@ -46,12 +74,27 @@ app.use(session({
     }
 }));
 
-// Calculate correct paths
-const rootDir = path.join(parentDir, '..');
-const homePageDir = path.join(rootDir, 'Home Page');
+;
 
-// Add this line to serve static files from the Admin Page directory
-app.use('/Admin Page', express1.static(path.join(rootDir, 'Admin Page')));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Admin login route (handles both new registrations and existing admin logins)
@@ -159,7 +202,7 @@ app.post('/adminLogin', function(req, res) {
                         req.session.adminEmail = email;
                         req.session.district = district_name;
                         
-                        // Send success message with redirection flag
+
                         res.json({
                             success: true,
                             message: "Admin registration successful!",
@@ -194,7 +237,7 @@ app.get('/admin-dashboard', function(req, res) {
     // Fetch admin data
     const adminQuery = 'SELECT * FROM admins WHERE adminid = ?';
 
-    // FIXED: Query to get ONLY unique complaints (no duplicates)
+
     const complaintsQuery = `
         SELECT DISTINCT
             c.complaint_id,
@@ -1186,7 +1229,13 @@ app.get('/profile', function(req, res) {
     if (!req.session.userId) {
         return res.redirect('/signup');
     }
-    
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    });
+
+
     // Fetch user data from database
     con.query('SELECT * FROM users WHERE userid = ?', [req.session.userId], function(err, results) {
         if (err) {
@@ -1274,8 +1323,27 @@ app.get('/get-user-data', function(req, res) {
 });
 
 
+
+
 // Logout endpoint
 // User logout route (add this near your other logout route)
+// Authentication middleware for user routes
+function requireUserAuth(req, res, next) {
+    if (!req.session.username) {
+        // If it's an AJAX request, return JSON
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.status(401).json({
+                success: false,
+                message: "Please log in to access this page",
+                redirect: "/signup"
+            });
+        }
+        // For regular requests, redirect to login
+        return res.redirect('/signup');
+    }
+    next();
+}
+
 
 app.post('/logout', function(req, res) {
     console.log('Logout endpoint hit');
@@ -1292,6 +1360,21 @@ app.post('/logout', function(req, res) {
         }
 
         console.log('Session destroyed successfully');
+
+        // Clear the session cookie
+        res.clearCookie('connect.sid', {
+            path: '/',
+            httpOnly: true,
+            secure: false // set to true if using HTTPS
+        });
+
+        // Set headers to prevent caching
+        res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        });
+
         res.json({
             success: true,
             message: "Logout successful"
@@ -1634,17 +1717,19 @@ app.post('/submit-complaint', upload.array('evidence', 10), function(req, res) {
 
 // Route to handle admin notifications when complaint is submitted
 app.post('/notify-admin', function(req, res) {
-    if (!req.session.adminId) {
-        return res.status(401).json({ success: false, message: "Not authenticated" });
+    // Remove admin authentication requirement since this is called after user submits complaint
+    const { complaintId } = req.body;
+
+    if (!complaintId) {
+        return res.status(400).json({ success: false, message: "Complaint ID is required" });
     }
 
-    const { complaintId, adminEmail } = req.body;
-
-    // Get complaint details
+    // Get complaint details and admin email
     con.query(`
-        SELECT c.*, u.fullName as user_fullname 
+        SELECT c.*, u.fullName as user_fullname, a.email as admin_email 
         FROM complaint c 
         JOIN users u ON c.username = u.username 
+        LEFT JOIN admins a ON c.admin_username = a.username
         WHERE c.complaint_id = ?
     `, [complaintId], function(err, results) {
         if (err) {
@@ -1658,23 +1743,50 @@ app.post('/notify-admin', function(req, res) {
 
         const complaint = results[0];
 
-        // Here you can add email notification logic
-        // For now, we'll just return success
-        res.json({
-            success: true,
-            message: "Admin notified successfully",
-            complaint: {
-                id: complaint.complaint_id,
-                type: complaint.complaint_type,
-                username: complaint.username,
-                user_fullname: complaint.user_fullname,
-                description: complaint.description,
-                location: complaint.location_address,
-                submittedDate: complaint.created_at
-            }
-        });
+        // If no admin is assigned, get a default admin (you can modify this logic)
+        if (!complaint.admin_email) {
+            con.query(`
+                SELECT email FROM admins LIMIT 1
+            `, function(err, adminResults) {
+                if (err || adminResults.length === 0) {
+                    console.error("Error fetching default admin:", err);
+                    return res.status(500).json({ success: false, message: "No admin found" });
+                }
+
+                res.json({
+                    success: true,
+                    message: "Admin notified successfully",
+                    complaint: {
+                        id: complaint.complaint_id,
+                        type: complaint.complaint_type,
+                        username: complaint.username,
+                        user_fullname: complaint.user_fullname,
+                        description: complaint.description,
+                        location: complaint.location_address,
+                        submittedDate: complaint.created_at
+                    },
+                    adminEmail: adminResults[0].email
+                });
+            });
+        } else {
+            res.json({
+                success: true,
+                message: "Admin notified successfully",
+                complaint: {
+                    id: complaint.complaint_id,
+                    type: complaint.complaint_type,
+                    username: complaint.username,
+                    user_fullname: complaint.user_fullname,
+                    description: complaint.description,
+                    location: complaint.location_address,
+                    submittedDate: complaint.created_at
+                },
+                adminEmail: complaint.admin_email
+            });
+        }
     });
 });
+
 
 
 
@@ -2050,7 +2162,7 @@ app.post('/send-chat-message', function(req, res) {
 });
 
 
-// handle complaint deletion
+// version with file deletion
 app.delete('/delete-complaint/:id', function(req, res) {
     // Check if user is logged in
     if (!req.session.userId) {
@@ -2065,7 +2177,7 @@ app.delete('/delete-complaint/:id', function(req, res) {
 
     // First, check if the complaint exists and belongs to the user and is pending
     con.query(
-        'SELECT * FROM complaints WHERE complaint_id = ? AND user_id = ? AND status = "pending"',
+        'SELECT * FROM complaint WHERE complaint_id = ? AND username = (SELECT username FROM users WHERE userid = ?) AND status = "pending"',
         [complaintId, userId],
         function(err, results) {
             if (err) {
@@ -2083,30 +2195,122 @@ app.delete('/delete-complaint/:id', function(req, res) {
                 });
             }
 
-            // Delete the complaint
+            // Get all evidence files for this complaint before deleting
             con.query(
-                'DELETE FROM complaints WHERE complaint_id = ? AND user_id = ?',
-                [complaintId, userId],
-                function(deleteErr, deleteResult) {
-                    if (deleteErr) {
-                        console.error("Error deleting complaint:", deleteErr);
+                'SELECT file_path FROM evidence WHERE complaint_id = ?',
+                [complaintId],
+                function(evidenceErr, evidenceFiles) {
+                    if (evidenceErr) {
+                        console.error("Error fetching evidence files:", evidenceErr);
                         return res.status(500).json({
                             success: false,
-                            message: "Error deleting complaint"
+                            message: "Error fetching evidence files"
                         });
                     }
 
-                    if (deleteResult.affectedRows === 0) {
-                        return res.status(404).json({
-                            success: false,
-                            message: "Complaint not found"
-                        });
-                    }
+                    // Start transaction
+                    con.beginTransaction(function(transactionErr) {
+                        if (transactionErr) {
+                            console.error("Error starting transaction:", transactionErr);
+                            return res.status(500).json({
+                                success: false,
+                                message: "Database transaction error"
+                            });
+                        }
 
-                    console.log(`Complaint ${complaintId} deleted successfully`);
-                    res.json({
-                        success: true,
-                        message: "Complaint deleted successfully"
+                        // Delete evidence files from database
+                        con.query(
+                            'DELETE FROM evidence WHERE complaint_id = ?',
+                            [complaintId],
+                            function(evidenceErr, evidenceResult) {
+                                if (evidenceErr) {
+                                    console.error("Error deleting evidence:", evidenceErr);
+                                    return con.rollback(function() {
+                                        res.status(500).json({
+                                            success: false,
+                                            message: "Error deleting evidence files"
+                                        });
+                                    });
+                                }
+
+                                // Delete status updates
+                                con.query(
+                                    'DELETE FROM status_updates WHERE complaint_id = ?',
+                                    [complaintId],
+                                    function(statusErr, statusResult) {
+                                        if (statusErr) {
+                                            console.error("Error deleting status updates:", statusErr);
+                                            return con.rollback(function() {
+                                                res.status(500).json({
+                                                    success: false,
+                                                    message: "Error deleting status updates"
+                                                });
+                                            });
+                                        }
+
+                                        // Delete the complaint
+                                        con.query(
+                                            'DELETE FROM complaint WHERE complaint_id = ? AND username = (SELECT username FROM users WHERE userid = ?)',
+                                            [complaintId, userId],
+                                            function(deleteErr, deleteResult) {
+                                                if (deleteErr) {
+                                                    console.error("Error deleting complaint:", deleteErr);
+                                                    return con.rollback(function() {
+                                                        res.status(500).json({
+                                                            success: false,
+                                                            message: "Error deleting complaint"
+                                                        });
+                                                    });
+                                                }
+
+                                                if (deleteResult.affectedRows === 0) {
+                                                    return con.rollback(function() {
+                                                        res.status(404).json({
+                                                            success: false,
+                                                            message: "Complaint not found"
+                                                        });
+                                                    });
+                                                }
+
+                                                // Commit the transaction
+                                                con.commit(function(commitErr) {
+                                                    if (commitErr) {
+                                                        console.error("Error committing transaction:", commitErr);
+                                                        return con.rollback(function() {
+                                                            res.status(500).json({
+                                                                success: false,
+                                                                message: "Error committing changes"
+                                                            });
+                                                        });
+                                                    }
+
+                                                    // After successful database deletion, delete physical files
+                                                    evidenceFiles.forEach(file => {
+                                                        if (file.file_path) {
+                                                            const filePath = path.join(rootDir, file.file_path);
+                                                            fs.unlink(filePath, (fileErr) => {
+                                                                if (fileErr) {
+                                                                    console.error(`Error deleting file ${filePath}:`, fileErr);
+                                                                    // Don't fail the request for file deletion errors
+                                                                } else {
+                                                                    console.log(`File deleted: ${filePath}`);
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+
+                                                    console.log(`Complaint ${complaintId} and all related data deleted successfully`);
+                                                    res.json({
+                                                        success: true,
+                                                        message: "Complaint deleted successfully"
+                                                    });
+                                                });
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
                     });
                 }
             );
