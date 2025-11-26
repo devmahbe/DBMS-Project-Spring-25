@@ -22,7 +22,6 @@
         }
 
         :root {
-            /* Professional Color Palette */
             --primary-dark: #1a202c;
             --primary-blue: #2563eb;
             --primary-light: #3b82f6;
@@ -37,13 +36,13 @@
             --danger: #dc2626;
             --accent: #8b5cf6;
 
-            /* Modern Shadows */
+
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
-            /* Typography */
+
             --font-xs: 0.75rem;
             --font-sm: 0.875rem;
             --font-base: 1rem;
@@ -52,7 +51,7 @@
             --font-2xl: 1.5rem;
             --font-3xl: 2rem;
 
-            /* Spacing */
+
             --spacing-xs: 0.25rem;
             --spacing-sm: 0.5rem;
             --spacing-md: 1rem;
@@ -60,7 +59,7 @@
             --spacing-xl: 2rem;
             --spacing-2xl: 3rem;
 
-            /* Border Radius */
+
             --radius-sm: 0.25rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
@@ -68,7 +67,7 @@
         }
 
         :root.dark-mode {
-            /* Dark Mode Color Palette */
+
             --primary-dark: #0f172a;
             --primary-blue: #3b82f6;
             --primary-light: #60a5fa;
@@ -83,8 +82,166 @@
             --danger: #ef4444;
             --accent: #a855f7;
         }
+        #evidenceViewerModal .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
 
-        /* Dark mode specific overrides */
+        .dark-mode #evidenceViewerModal .modal-content {
+            background: var(--light-gray);
+        }
+
+        .dark-mode #evidenceViewerModal .modal-content > div:first-child {
+            border-bottom-color: var(--border-gray);
+        }
+
+        .dark-mode #evidence-viewer-content .evidence-item {
+            background: var(--primary-dark) !important;
+            border-color: var(--border-gray) !important;
+        }
+
+        .filter-section {
+            margin: var(--spacing-lg) 0;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-gray);
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            min-width: 180px;
+            flex: 1;
+        }
+
+        .filter-group label {
+            font-size: var(--font-sm);
+            font-weight: 500;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .filter-group label i {
+            color: var(--primary-blue);
+            font-size: var(--font-xs);
+        }
+
+        .filter-input {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-gray);
+            border-radius: var(--radius-md);
+            font-size: var(--font-sm);
+            background: var(--white);
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .filter-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            font-size: var(--font-sm);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .btn.primary.filter-btn {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn.primary.filter-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn.secondary.filter-btn {
+            background: var(--secondary-gray);
+            color: var(--white);
+        }
+
+        .btn.secondary.filter-btn:hover {
+            background: var(--text-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Dark mode filter styles */
+        .dark-mode .filter-section {
+            background: var(--light-gray);
+            border-color: var(--border-gray);
+        }
+
+        .dark-mode .filter-input {
+            background: var(--primary-dark);
+            color: var(--text-dark);
+            border-color: var(--border-gray);
+        }
+
+        .dark-mode .filter-group label {
+            color: var(--text-dark);
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-info strong {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .user-info small {
+            color: var(--text-light);
+            font-size: var(--font-xs);
+        }
+
+        .dark-mode .user-info strong {
+            color: var(--text-dark);
+        }
+
+        .dark-mode .user-info small {
+            color: var(--text-light);
+        }
+
+
+        /* Responsive filter layout */
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+        }
+
         .dark-mode .admin-page {
             background-color: var(--primary-dark);
         }
@@ -1172,6 +1329,8 @@
 
         <!-- Main Content -->
         <main class="panel-content">
+
+
             <!-- Profile Section -->
             <section id="profile" class="panel-section profile-section">
                 <div class="profile-container">
@@ -1301,6 +1460,7 @@
 
             <!-- Cases Section -->
             <section id="cases" class="panel-section">
+
                 <div class="data-table">
                     <div class="table-header">
                         <h2 class="table-title">
@@ -1311,6 +1471,114 @@
                             <i class="fas fa-refresh"></i> Refresh
                         </button>
                     </div>
+                    <!-- Case Analytics Cards - ADD THIS BLOCK HERE -->
+                    <div class="analytics-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-lg); margin: var(--spacing-xl); background: var(--light-gray); border-radius: var(--radius-lg); padding: var(--spacing-lg);">
+
+                        <div class="stats-card" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%); color: var(--white); padding: var(--spacing-xl); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="font-size: var(--font-sm); font-weight: 500; opacity: 0.9; margin-bottom: var(--spacing-sm);">Total Cases</h3>
+                                    <p style="font-size: var(--font-3xl); font-weight: 700; margin: 0;" id="total-cases"><%= complaints.length %></p>
+                                </div>
+                                <i class="fas fa-clipboard-list" style="font-size: 2rem; opacity: 0.7;"></i>
+                            </div>
+                        </div>
+
+                        <div class="stats-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: var(--white); padding: var(--spacing-xl); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="font-size: var(--font-sm); font-weight: 500; opacity: 0.9; margin-bottom: var(--spacing-sm);">Pending</h3>
+                                    <p style="font-size: var(--font-3xl); font-weight: 700; margin: 0;" id="pending-cases"><%= complaints.filter(c => c.status === 'pending').length %></p>
+                                </div>
+                                <i class="fas fa-clock" style="font-size: 2rem; opacity: 0.7;"></i>
+                            </div>
+                        </div>
+
+                        <div class="stats-card" style="background: linear-gradient(135deg, var(--primary-blue) 0%, #1e40af 100%); color: var(--white); padding: var(--spacing-xl); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="font-size: var(--font-sm); font-weight: 500; opacity: 0.9; margin-bottom: var(--spacing-sm);">Verifying</h3>
+                                    <p style="font-size: var(--font-3xl); font-weight: 700; margin: 0;" id="verifying-cases"><%= complaints.filter(c => c.status === 'verifying').length %></p>
+                                </div>
+                                <i class="fas fa-search" style="font-size: 2rem; opacity: 0.7;"></i>
+                            </div>
+                        </div>
+
+                        <div class="stats-card" style="background: linear-gradient(135deg, #be185d 0%, #9d174d 100%); color: var(--white); padding: var(--spacing-xl); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="font-size: var(--font-sm); font-weight: 500; opacity: 0.9; margin-bottom: var(--spacing-sm);">Investigating</h3>
+                                    <p style="font-size: var(--font-3xl); font-weight: 700; margin: 0;" id="investigating-cases"><%= complaints.filter(c => c.status === 'investigating').length %></p>
+                                </div>
+                                <i class="fas fa-magnifying-glass" style="font-size: 2rem; opacity: 0.7;"></i>
+                            </div>
+                        </div>
+
+                        <div class="stats-card" style="background: linear-gradient(135deg, var(--success) 0%, #047857 100%); color: var(--white); padding: var(--spacing-xl); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3 style="font-size: var(--font-sm); font-weight: 500; opacity: 0.9; margin-bottom: var(--spacing-sm);">Resolved</h3>
+                                    <p style="font-size: var(--font-3xl); font-weight: 700; margin: 0;" id="resolved-cases"><%= complaints.filter(c => c.status === 'resolved').length %></p>
+                                </div>
+                                <i class="fas fa-check-circle" style="font-size: 2rem; opacity: 0.7;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <div class="filter-container">
+                            <div class="filter-group">
+                                <label for="username-filter">
+                                    <i class="fas fa-user"></i>
+                                    Search Complainant
+                                </label>
+                                <input
+                                        type="text"
+                                        id="username-filter"
+                                        class="filter-input"
+                                        placeholder="Enter username or full name..."
+                                >
+                            </div>
+                            <div class="filter-group">
+                                <label for="date-from-filter">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    From Date
+                                </label>
+                                <input
+                                        type="date"
+                                        id="date-from-filter"
+                                        class="filter-input"
+                                >
+                            </div>
+                            <div class="filter-group">
+                                <label for="date-to-filter">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    To Date
+                                </label>
+                                <input
+                                        type="date"
+                                        id="date-to-filter"
+                                        class="filter-input"
+                                >
+                            </div>
+                            <div class="filter-group">
+                                <button class="btn primary filter-btn" onclick="applyCaseFilters()">
+                                    <i class="fas fa-search"></i>
+                                    Apply Filters
+                                </button>
+                            </div>
+                            <div class="filter-group">
+                                <button class="btn secondary filter-btn" onclick="clearCaseFilters()">
+                                    <i class="fas fa-times"></i>
+                                    Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
 
                     <div class="table-container">
                         <div id="cases-content">
@@ -1321,6 +1589,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </section>
 
@@ -1491,20 +1760,14 @@
 </div>
 
 <!-- Evidence Modal -->
-<div id="evidenceModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Complaint Evidence</h3>
-            <button class="close-btn" onclick="closeModal('evidenceModal')">&times;</button>
+<div id="evidenceViewerModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 90vw; max-height: 90vh; padding: 0; overflow: hidden;">
+        <div style="padding: 1rem; border-bottom: 1px solid var(--border-gray); display: flex; justify-content: space-between; align-items: center;">
+            <h3>Evidence Viewer - Complaint #<span id="evidence-viewer-complaint-id"></span></h3>
+            <button onclick="closeEvidenceViewer()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
         </div>
-        <div class="modal-body">
-            <p>Complaint ID: <strong id="evidence-complaint-id"></strong></p>
-            <div id="evidence-content">
-                <!-- Evidence will be loaded here -->
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn secondary" onclick="closeModal('evidenceModal')">Close</button>
+        <div id="evidence-viewer-content" style="padding: 1rem; max-height: calc(90vh - 80px); overflow-y: auto;">
+            <!-- Evidence content will be loaded here -->
         </div>
     </div>
 </div>
@@ -1619,6 +1882,187 @@
     });
 
 
+    //Case filtering functions
+    function applyCaseFilters() {
+        console.log('Applying case filters...');
+
+        const usernameFilter = document.getElementById('username-filter').value.trim();
+        const dateFromFilter = document.getElementById('date-from-filter').value;
+        const dateToFilter = document.getElementById('date-to-filter').value;
+
+        console.log('Filter values:', { usernameFilter, dateFromFilter, dateToFilter });
+
+        //Build query parameters
+        const params = new URLSearchParams();
+        if (usernameFilter) params.append('username', usernameFilter);
+        if (dateFromFilter) params.append('dateFrom', dateFromFilter);
+        if (dateToFilter) params.append('dateTo', dateToFilter);
+
+        console.log('Query params:', params.toString());
+
+        //Fetch filtered cases
+        fetch('/get-admin-cases?' + params.toString())
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Filter response:', data);
+                if (data.success) {
+                    updateCasesDisplay(data.cases, data.analytics);
+                    showMessage('Filters applied successfully', 'success');
+                } else {
+                    showMessage('Error applying filters: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error applying filters:', error);
+                showMessage('Error applying filters: ' + error.message, 'error');
+            });
+    }
+
+    function clearCaseFilters() {
+        console.log('Clearing case filters...');
+        document.getElementById('username-filter').value = '';
+        document.getElementById('date-from-filter').value = '';
+        document.getElementById('date-to-filter').value = '';
+
+        // Refresh cases without filters
+        applyCaseFilters();
+    }
+
+    function updateCasesDisplay(cases, analytics) {
+        console.log('Updating cases display with:', cases.length, 'cases');
+
+        //Update analytics grid
+        updateAnalyticsGrid(analytics);
+
+        //Update cases table
+        const casesContent = document.getElementById('cases-content');
+        if (!casesContent) {
+            console.error('Cases content element not found');
+            return;
+        }
+
+        if (cases.length === 0) {
+            casesContent.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No Cases Found</h3>
+                <p>No cases match the current filters.</p>
+            </div>
+        `;
+            return;
+        }
+
+        //Generate cases table HTML
+        let casesHTML = `
+        <table class="data-table-content">
+            <thead>
+                <tr>
+                    <th>Case ID</th>
+                    <th>Complainant</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Last Updated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+        cases.forEach(case_item => {
+            // Ensure all properties exist
+            const complaintId = case_item.complaint_id || 'N/A';
+            const complainantUsername = case_item.complainant_username || 'Unknown';
+            const complainantFullname = case_item.complainant_fullname || 'N/A';
+            const complaintType = case_item.complaint_type || 'General';
+            const status = case_item.status || 'pending';
+            const createdAt = case_item.created_at;
+            const lastUpdated = case_item.last_updated;
+
+            const statusClass = getStatusClass(status);
+            const createdDate = createdAt ? new Date(createdAt).toLocaleDateString() : 'Unknown';
+            const lastUpdatedDate = lastUpdated ? new Date(lastUpdated).toLocaleDateString() : 'Never';
+
+            // Display full name if available and not 'N/A', otherwise show username
+            const displayName = (complainantFullname && complainantFullname !== 'N/A') ? complainantFullname : complainantUsername;
+            const showUsername = (complainantFullname && complainantFullname !== 'N/A' && complainantUsername !== 'Unknown');
+
+            casesHTML += `
+            <tr>
+                <td>#${complaintId}</td>
+                <td>
+                    <div class="user-info">
+                        <strong>${displayName}</strong>
+                        ${showUsername ? `<br><small>@${complainantUsername}</small>` : ''}
+                    </div>
+                </td>
+                <td>${complaintType}</td>
+                <td><span class="status-badge ${statusClass}">${status}</span></td>
+                <td>${createdDate}</td>
+                <td>${lastUpdatedDate}</td>
+                <td>
+                    <button class="btn small primary" onclick="viewCase(${complaintId})">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </td>
+            </tr>
+        `;
+        });
+
+        casesHTML += '</tbody></table>';
+        casesContent.innerHTML = casesHTML;
+    }
+
+    function getStatusClass(status) {
+        switch(status) {
+            case 'pending': return 'status-pending';
+            case 'verifying': return 'status-verifying';
+            case 'investigating': return 'status-investigating';
+            case 'resolved': return 'status-resolved';
+            default: return 'status-pending';
+        }
+    }
+
+    // Add this function to help with debugging
+    function refreshCases() {
+        console.log('Refreshing cases...');
+        fetch('/get-admin-cases')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateCasesDisplay(data.cases, data.analytics);
+                } else {
+                    showMessage('Error refreshing cases: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error refreshing cases:', error);
+                showMessage('Error refreshing cases', 'error');
+            });
+    }
+
+    // Make sure this function exists for updating analytics
+    function updateAnalyticsGrid(analytics) {
+        // Update analytics display elements
+        const totalElement = document.querySelector('.analytics-card .total-cases');
+        const pendingElement = document.querySelector('.analytics-card .pending-cases');
+        const verifyingElement = document.querySelector('.analytics-card .verifying-cases');
+        const investigatingElement = document.querySelector('.analytics-card .investigating-cases');
+        const resolvedElement = document.querySelector('.analytics-card .resolved-cases');
+
+        if (totalElement) totalElement.textContent = analytics.total || 0;
+        if (pendingElement) pendingElement.textContent = analytics.pending || 0;
+        if (verifyingElement) verifyingElement.textContent = analytics.verifying || 0;
+        if (investigatingElement) investigatingElement.textContent = analytics.investigating || 0;
+        if (resolvedElement) resolvedElement.textContent = analytics.resolved || 0;
+    }
+
 
 
 
@@ -1730,18 +2174,40 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Send admin message - FIXED URL
+
+
+
+    // Send admin message
+    let isSendingMessage = false;
+
     async function sendAdminMessage() {
+        // Prevent multiple simultaneous sends
+        if (isSendingMessage) {
+            console.log('Message send already in progress, ignoring...');
+            return;
+        }
+
         const chatInput = document.getElementById('chatInput');
         const message = chatInput.value.trim();
 
-        if (!message || !currentComplaintId) return;
+        if (!message || !currentComplaintId) {
+            console.log('No message or complaint ID, aborting send');
+            return;
+        }
+
+        // Set flag to prevent multiple sends
+        isSendingMessage = true;
 
         const chatSend = document.getElementById('chatSend');
+        const originalButtonText = chatSend.innerHTML;
+
+        // Disable button and show loading state
         chatSend.disabled = true;
+        chatSend.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         try {
-            // Fixed: Updated URL to match backend route
+            console.log('Sending message:', { complaintId: currentComplaintId, message: message.substring(0, 50) });
+
             const response = await fetch('/admin-send-chat-message', {
                 method: 'POST',
                 headers: {
@@ -1755,11 +2221,16 @@
             });
 
             const data = await response.json();
+            console.log('Server response:', data);
 
             if (data.success) {
                 chatInput.value = '';
                 chatInput.style.height = 'auto';
-                loadChatMessages(currentComplaintId); // Reload messages
+
+                // Add a small delay before reloading to prevent race conditions
+                setTimeout(() => {
+                    loadChatMessages(currentComplaintId);
+                }, 100);
             } else {
                 console.error('Error sending message:', data.message);
                 alert('Error sending message: ' + data.message);
@@ -1768,9 +2239,42 @@
             console.error('Error sending message:', error);
             alert('Error sending message. Please try again.');
         } finally {
+            // Reset button state and flag
             chatSend.disabled = false;
+            chatSend.innerHTML = originalButtonText;
+            isSendingMessage = false;
         }
     }
+
+    // Prevent Enter key from submitting multiple times
+    function handleChatKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevent form submission if in a form
+
+            // Only send if not already sending
+            if (!isSendingMessage) {
+                sendAdminMessage();
+            }
+        }
+    }
+
+    // Make sure event listeners are attached only once
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+
+        // Remove any existing listeners first (prevent duplicates)
+        if (chatInput) {
+            chatInput.removeEventListener('keypress', handleChatKeyPress);
+            chatInput.addEventListener('keypress', handleChatKeyPress);
+        }
+
+        if (chatSend) {
+            chatSend.removeEventListener('click', sendAdminMessage);
+            chatSend.addEventListener('click', sendAdminMessage);
+        }
+    });
+
 
     // Auto-resize textarea function
     function autoResizeTextarea() {
@@ -1948,33 +2452,31 @@
 
 
     function viewEvidence(complaintId) {
-        document.getElementById('evidence-complaint-id').textContent = complaintId;
-        document.getElementById('evidence-content').innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading evidence...</p></div>';
+        document.getElementById('evidence-viewer-complaint-id').textContent = complaintId;
+        document.getElementById('evidence-viewer-content').innerHTML = '<div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i><p>Loading evidence...</p></div>';
 
         fetch(`/get-complaint-evidence/${complaintId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    const evidenceContainer = document.getElementById('evidence-content');
+                    const evidenceContainer = document.getElementById('evidence-viewer-content');
 
                     if (data.evidence.length === 0) {
-                        evidenceContainer.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><h3>No Evidence</h3><p>This complaint has no evidence to show.</p></div>';
+                        evidenceContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-light);"><i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>No Evidence</h3><p>This complaint has no evidence files.</p></div>';
                     } else {
-                        let evidenceHtml = '<div style="display: grid; gap: 1rem;">';
-                        data.evidence.forEach(evidence => {
+                        let evidenceHtml = '<div style="display: grid; gap: 2rem;">';
+
+                        data.evidence.forEach((evidence, index) => {
                             const fileExtension = evidence.file_path.split('.').pop().toLowerCase();
                             const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension);
                             const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(fileExtension);
                             const isAudio = ['mp3', 'wav', 'ogg', 'aac'].includes(fileExtension);
 
                             // Construct the correct file path
-                            // Check if the file_path already includes the subdirectory
                             let filePath;
                             if (evidence.file_path.includes('/')) {
-                                // Path already includes subdirectory (like "images/filename.jpg")
                                 filePath = `/uploads/${evidence.file_path}`;
                             } else {
-                                // Path is just filename, determine subdirectory based on type
                                 if (isImage) {
                                     filePath = `/uploads/images/${evidence.file_path}`;
                                 } else if (isVideo) {
@@ -1987,53 +2489,74 @@
                             }
 
                             evidenceHtml += `
-        <div style="padding: 1rem; border: 1px solid var(--border-gray); border-radius: var(--radius-md);">
-            <p><strong>Type:</strong> ${evidence.file_type}</p>
-            <p><strong>Uploaded:</strong> ${new Date(evidence.uploaded_at).toLocaleString()}</p>
-            <p><strong>File Path:</strong> ${filePath}</p>
-            <div style="margin-top: 1rem;">
-    `;
+                            <div style="background: var(--white); border: 1px solid var(--border-gray); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);">
+                                <div style="padding: 1rem; border-bottom: 1px solid var(--border-gray); display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h4 style="margin: 0; color: var(--text-dark);">Evidence ${index + 1}</h4>
+                                        <p style="margin: 0.5rem 0 0 0; color: var(--text-light); font-size: var(--font-sm);">
+                                            <i class="fas fa-calendar"></i> ${new Date(evidence.uploaded_at).toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <span style="background: var(--primary-blue); color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-md); font-size: var(--font-sm);">
+                                        ${evidence.file_type}
+                                    </span>
+                                </div>
+                                <div style="padding: 1rem; text-align: center;">`;
 
                             if (isImage) {
-                                evidenceHtml += `<img src="${filePath}" alt="Evidence" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md); object-fit: contain;"
-                                onload="console.log('Image loaded successfully:', '${filePath}')"
-                                onerror="console.error('Image failed to load:', '${filePath}'); this.style.display='none'; this.nextElementSibling.style.display='block';">
-                            <div style="display: none; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-md); text-align: center;">
-                                <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
-                                <p>Image could not be loaded</p>
-                                <p><small>Path: ${filePath}</small></p>
-                                <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Open in new tab</a>
-                            </div>`;
+                                evidenceHtml += `
+                                <img src="${filePath}"
+                                     alt="Evidence Image"
+                                     style="max-width: 100%; max-height: 60vh; border-radius: var(--radius-md); object-fit: contain; cursor: pointer;"
+                                     onclick="openFullscreen('${filePath}', 'image')"
+                                     onload="console.log('Image loaded successfully')"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div style="display: none; padding: 2rem; background: #f8f9fa; border-radius: var(--radius-md); color: var(--danger);">
+                                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                                    <p>Image could not be loaded</p>
+                                    <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Try opening in new tab</a>
+                                </div>`;
                             } else if (isVideo) {
-                                evidenceHtml += `<video controls style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md);"
-                                onloadstart="console.log('Video loading started:', '${filePath}')"
-                                oncanplay="console.log('Video can play:', '${filePath}')"
-                                onerror="console.error('Video failed to load:', '${filePath}'); this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                <source src="${filePath}" type="video/${fileExtension}">
-                                Your browser does not support video.
-                            </video>
-                            <div style="display: none; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-md); text-align: center;">
-                                <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
-                                <p>Video could not be loaded</p>
-                                <p><small>Path: ${filePath}</small></p>
-                                <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Open in new tab</a>
-                            </div>`;
+                                evidenceHtml += `
+                                <video controls
+                                       style="max-width: 100%; max-height: 60vh; border-radius: var(--radius-md);"
+                                       onloadstart="console.log('Video loading started')"
+                                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                    <source src="${filePath}" type="video/${fileExtension}">
+                                    Your browser does not support video playback.
+                                </video>
+                                <div style="display: none; padding: 2rem; background: #f8f9fa; border-radius: var(--radius-md); color: var(--danger);">
+                                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                                    <p>Video could not be loaded</p>
+                                    <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Try opening in new tab</a>
+                                </div>`;
                             } else if (isAudio) {
-                                evidenceHtml += `<audio controls style="width: 100%;"
-                                onloadstart="console.log('Audio loading started:', '${filePath}')"
-                                oncanplay="console.log('Audio can play:', '${filePath}')"
-                                onerror="console.error('Audio failed to load:', '${filePath}'); this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                <source src="${filePath}" type="audio/${fileExtension}">
-                                Your browser does not support audio.
-                            </audio>
-                            <div style="display: none; padding: 1rem; background: #f8f9fa; border-radius: var(--radius-md); text-align: center;">
-                                <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
-                                <p>Audio could not be loaded</p>
-                                <p><small>Path: ${filePath}</small></p>
-                                <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Open in new tab</a>
-                            </div>`;
+                                evidenceHtml += `
+                                <div style="background: var(--light-gray); padding: 2rem; border-radius: var(--radius-md); margin-bottom: 1rem;">
+                                    <i class="fas fa-music" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                                    <p style="margin-bottom: 1rem; color: var(--text-dark);">Audio Evidence</p>
+                                </div>
+                                <audio controls
+                                       style="width: 100%; max-width: 400px;"
+                                       onloadstart="console.log('Audio loading started')"
+                                       onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                    <source src="${filePath}" type="audio/${fileExtension}">
+                                    Your browser does not support audio playback.
+                                </audio>
+                                <div style="display: none; padding: 2rem; background: #f8f9fa; border-radius: var(--radius-md); color: var(--danger);">
+                                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                                    <p>Audio could not be loaded</p>
+                                    <a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Try opening in new tab</a>
+                                </div>`;
                             } else {
-                                evidenceHtml += `<a href="${filePath}" target="_blank" style="color: var(--primary-blue); text-decoration: underline;">Download File</a>`;
+                                evidenceHtml += `
+                                <div style="padding: 2rem; background: var(--light-gray); border-radius: var(--radius-md);">
+                                    <i class="fas fa-file" style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;"></i>
+                                    <p style="margin-bottom: 1rem; color: var(--text-dark);">File: ${evidence.file_path}</p>
+                                    <a href="${filePath}" target="_blank" class="btn primary">
+                                        <i class="fas fa-download"></i> Download File
+                                    </a>
+                                </div>`;
                             }
 
                             evidenceHtml += `</div></div>`;
@@ -2042,16 +2565,36 @@
                         evidenceContainer.innerHTML = evidenceHtml;
                     }
                 } else {
-                    document.getElementById('evidence-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load evidence.</p></div>';
+                    document.getElementById('evidence-viewer-content').innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--danger);"><i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>Error</h3><p>Failed to load evidence.</p></div>';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('evidence-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load evidence.</p></div>';
+                document.getElementById('evidence-viewer-content').innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--danger);"><i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>Error</h3><p>Failed to load evidence.</p></div>';
             });
 
-        document.getElementById('evidenceModal').style.display = 'flex';
+        document.getElementById('evidenceViewerModal').style.display = 'flex';
     }
+
+    function closeEvidenceViewer() {
+        document.getElementById('evidenceViewerModal').style.display = 'none';
+    }
+
+    function openFullscreen(src, type) {
+        if (type === 'image') {
+            const fullscreenDiv = document.createElement('div');
+            fullscreenDiv.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 9999; cursor: pointer;';
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.style.cssText = 'max-width: 95%; max-height: 95%; object-fit: contain;';
+
+            fullscreenDiv.appendChild(img);
+            fullscreenDiv.onclick = () => document.body.removeChild(fullscreenDiv);
+            document.body.appendChild(fullscreenDiv);
+        }
+    }
+
 
 
 
@@ -2062,90 +2605,64 @@
         document.getElementById('descriptionModal').style.display = 'flex';
     }
 
+    function updateAnalytics(complaints) {
+        const totalCases = complaints.length;
+        const pendingCases = complaints.filter(c => c.status === 'pending').length;
+        const verifyingCases = complaints.filter(c => c.status === 'verifying').length;
+        const investigatingCases = complaints.filter(c => c.status === 'investigating').length;
+        const resolvedCases = complaints.filter(c => c.status === 'resolved').length;
+
+        document.getElementById('total-cases').textContent = totalCases;
+        document.getElementById('pending-cases').textContent = pendingCases;
+        document.getElementById('verifying-cases').textContent = verifyingCases;
+        document.getElementById('investigating-cases').textContent = investigatingCases;
+        document.getElementById('resolved-cases').textContent = resolvedCases;
+    }
 
 
-    function loadCases() {
-        document.getElementById('cases-content').innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Loading Cases...</h3></div>';
 
+
+    // Function to load cases when Cases section is opened
+    function refreshCases() {
+        console.log('Refreshing cases...');
         fetch('/get-admin-cases')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Cases loaded:', data);
                 if (data.success) {
-                    const casesContainer = document.getElementById('cases-content');
-
-                    let casesHtml = `
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 2rem; margin-bottom: 2rem;">
-                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
-                            <h3 style="color: var(--primary-blue); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.total}</h3>
-                            <p style="color: var(--text-light);">Total Cases</p>
-                        </div>
-                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
-                            <h3 style="color: var(--warning); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.pending}</h3>
-                            <p style="color: var(--text-light);">Pending</p>
-                        </div>
-                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
-                            <h3 style="color: var(--primary-blue); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.verifying}</h3>
-                            <p style="color: var(--text-light);">Verifying</p>
-                        </div>
-                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
-                            <h3 style="color: var(--accent); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.investigating}</h3>
-                            <p style="color: var(--text-light);">Investigating</p>
-                        </div>
-                        <div style="background: var(--white); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: center;">
-                            <h3 style="color: var(--success); font-size: 2rem; margin-bottom: 0.5rem;">${data.analytics.resolved}</h3>
-                            <p style="color: var(--text-light);">Resolved</p>
-                        </div>
-                    </div>
-                `;
-
-                    if (data.cases.length > 0) {
-                        casesHtml += `
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>User</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Created</th>
-                                    <th>Last Updated</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-
-                        data.cases.forEach(case_item => {
-                            casesHtml += `
-                            <tr>
-                                <td>#${case_item.complaint_id}</td>
-                                <td>${case_item.username}</td>
-                                <td>${case_item.complaint_type}</td>
-                                <td><span class="status-badge ${case_item.status}">${case_item.status}</span></td>
-                                <td>${new Date(case_item.created_at).toLocaleDateString()}</td>
-                                <td>${case_item.last_updated ? new Date(case_item.last_updated).toLocaleDateString() : 'Not updated'}</td>
-                            </tr>
-                        `;
-                        });
-
-                        casesHtml += '</tbody></table>';
-                    } else {
-                        casesHtml += '<div class="empty-state"><i class="fas fa-chart-bar"></i><h3>No Cases Found</h3><p>No cases have been handled yet.</p></div>';
-                    }
-
-                    casesContainer.innerHTML = casesHtml;
+                    updateCasesDisplay(data.cases, data.analytics);
                 } else {
-                    document.getElementById('cases-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load cases data.</p></div>';
+                    showMessage('Error loading cases: ' + data.message, 'error');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('cases-content').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Failed to load cases data.</p></div>';
+                console.error('Error loading cases:', error);
+                showMessage('Error loading cases', 'error');
             });
     }
 
-    function refreshCases() {
-        loadCases();
-    }
+    // Call refreshCases when Cases tab is clicked
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add event listener to the Cases button
+        const casesButton = document.querySelector('[onclick="showSection(\'cases\')"]');
+        if (casesButton) {
+            casesButton.addEventListener('click', function() {
+                setTimeout(refreshCases, 100); // Small delay to ensure section is shown
+            });
+        }
+
+        // If Cases section is the default active section, load data immediately
+        const casesSection = document.getElementById('cases');
+        if (casesSection && casesSection.style.display !== 'none') {
+            refreshCases();
+        }
+    });
+
 
     function logoutAdmin() {
         if (confirm('Are you sure you want to logout?')) {
