@@ -3,13 +3,21 @@ var app = express1();
 var con = require('../../ServerConnection.js');
 const multer = require('multer');
 const mysql = require('mysql2/promise');
-require('dotenv').config();
+const path = require('path');
+
+// Load environment variables from secret.env file
+require('dotenv').config({ path: path.join(__dirname, '../../secret.env') });
+
+// Debug: Verify environment variables are loaded
+console.log('🔍 Loading environment from:', path.join(__dirname, '../../secret.env'));
+console.log('📧 EMAIL_USER:', process.env.EMAIL_USER ? '✅ Loaded' : '❌ Missing');
+console.log('🔐 EMAIL_PASS:', process.env.EMAIL_PASS ? '✅ Loaded' : '❌ Missing');
+
 const fs = require('fs');
 var bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 app.use(bodyParser.json());
-const path = require('path');
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../../User/views'));
@@ -85,6 +93,39 @@ function createNotification(complaintId, message, type = 'system') {
 
 const session = require('express-session');
 
+// Nodemailer for sending emails (Alternative to EmailJS)
+const nodemailer = require('nodemailer');
+
+// Create transporter for sending emails with explicit configuration
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+
+// Verify transporter configuration on startup
+transporter.verify(function(error, success) {
+    if (error) {
+        console.error('❌ Email configuration error:', error.message);
+        console.log('📧 Please check your EMAIL_USER and EMAIL_PASS in the .env file');
+        console.log('🔐 Make sure you:');
+        console.log('   1. Enabled 2-Step Verification on Gmail');
+        console.log('   2. Generated an App Password (not your regular password)');
+        console.log('   3. Used the App Password in .env file without spaces');
+    } else {
+        console.log('✅ Email server is ready to send messages');
+    }
+});
+
+// Store OTPs temporarily (in production, use Redis or database)
+const otpStore = new Map();
 
 app.use(session({
     secret: 'your_secure_random_string_here',
@@ -1260,6 +1301,127 @@ app.get('/login', function(req, res) {
     }
 
     res.sendFile(loginPath);
+});
+
+// Test email endpoint - Visit http://localhost:3000/test-email to check if email works
+app.get('/test-email', function(req, res) {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER, // Send to yourself
+        subject: '✅ SecureVoice - Email Test Successful!',
+        html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #28a745;">🎉 Success!</h2>
+                <p>Your email configuration is working correctly!</p>
+                <p><strong>From:</strong> ${process.env.EMAIL_USER}</p>
+                <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                <hr>
+                <p style="color: #666; font-size: 12px;">SecureVoice Crime Reporting System</p>
+            </div>
+        `
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.error('❌ Test email failed:', error.message);
+            res.status(500).json({ 
+                success: false, 
+                error: error.message,
+                message: 'Email configuration error. Check server console for details.'
+            });
+        } else {
+            console.log('✅ Test email sent successfully:', info.response);
+            res.json({ 
+                success: true, 
+                message: 'Test email sent successfully! Check your inbox.',
+                info: info.response 
+            });
+        }
+    });
+});
+
+// New endpoint to send OTP via email
+app.post('/send-otp', function(req, res) {
+    const email = req.body.email;
+    
+    if (!email) {
+        return res.status(400).json({ success: false, message: "Email is required" });
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Store OTP with 5-minute expiration
+    otpStore.set(email, {
+        otp: otp,
+        expires: Date.now() + 5 * 60 * 1000 // 5 minutes
+    });
+
+    // Email content
+    const mailOptions = {
+        from: process.env.EMAIL_USER || 'your-email@gmail.com',
+        to: email,
+        subject: 'SecureVoice - Your OTP Code',
+        html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #21566a;">SecureVoice - Email Verification</h2>
+                <p>Your OTP code is:</p>
+                <h1 style="background-color: #f0f0f0; padding: 15px; text-align: center; letter-spacing: 5px; color: #21566a;">
+                    ${otp}
+                </h1>
+                <p>This code will expire in 5 minutes.</p>
+                <p>If you didn't request this code, please ignore this email.</p>
+                <hr style="margin-top: 30px;">
+                <p style="color: #666; font-size: 12px;">SecureVoice Crime Reporting System</p>
+            </div>
+        `
+    };
+
+    // Send email
+    transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+            console.error('Email sending error:', error);
+            return res.status(500).json({ 
+                success: false, 
+                message: "Failed to send OTP. Please check your email configuration." 
+            });
+        }
+        
+        console.log('OTP email sent:', info.response);
+        res.json({ 
+            success: true, 
+            message: "OTP sent successfully to your email" 
+        });
+    });
+});
+
+// New endpoint to verify OTP
+app.post('/verify-otp', function(req, res) {
+    const { email, otp } = req.body;
+    
+    if (!email || !otp) {
+        return res.status(400).json({ success: false, message: "Email and OTP are required" });
+    }
+
+    const storedData = otpStore.get(email);
+    
+    if (!storedData) {
+        return res.status(400).json({ success: false, message: "OTP not found or expired" });
+    }
+
+    if (Date.now() > storedData.expires) {
+        otpStore.delete(email);
+        return res.status(400).json({ success: false, message: "OTP has expired" });
+    }
+
+    if (storedData.otp !== otp) {
+        return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+
+    // OTP is valid, remove it from store
+    otpStore.delete(email);
+    
+    res.json({ success: true, message: "OTP verified successfully" });
 });
 
 
@@ -2555,12 +2717,48 @@ app.get('/dashboard-stats', function(req, res) {
 
 const PORT = process.env.PORT || 3000;
 
+// Function to open browser
+function openBrowser(url) {
+    const { exec } = require('child_process');
+    const platform = process.platform;
+    
+    let command;
+    if (platform === 'win32') {
+        command = `start ${url}`;
+    } else if (platform === 'darwin') {
+        command = `open ${url}`;
+    } else {
+        command = `xdg-open ${url}`;
+    }
+    
+    exec(command, (error) => {
+        if (error) {
+            console.error('Could not open browser:', error);
+        }
+    });
+}
+
 app.listen(PORT, () => {
+    const url = `http://localhost:${PORT}/homepage`;
     console.log(`Server running on port ${PORT}`);
+    console.log(`Opening browser at ${url}`);
+    
+    // Open browser after a short delay to ensure server is ready
+    setTimeout(() => {
+        openBrowser(url);
+    }, 1000);
 }).on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
         console.error(`Port ${PORT} is in use. Trying another port...`);
-        app.listen(PORT + 1, () => console.log(`Server running on port ${PORT + 1}`));
+        const newPort = PORT + 1;
+        app.listen(newPort, () => {
+            const url = `http://localhost:${newPort}/homepage`;
+            console.log(`Server running on port ${newPort}`);
+            console.log(`Opening browser at ${url}`);
+            setTimeout(() => {
+                openBrowser(url);
+            }, 1000);
+        });
     } else {
         console.error(err);
     }

@@ -1,10 +1,5 @@
-// Admin Login and OTP Verification
+// Admin Login and OTP Verification (Using Nodemailer Backend)
 document.addEventListener("DOMContentLoaded", function () {
-    // EmailJS public key
-    emailjs.init('1RHpGS2tq0gxGer21');
-
-    let generatedOTP = "";
-
     const form = document.querySelector(".sign-in-form");
     const usernameInput = form.querySelector('input[name="username"]');
     const emailInput = form.querySelector('input[name="email"]');
@@ -85,87 +80,132 @@ document.addEventListener("DOMContentLoaded", function () {
     emailInput.addEventListener("blur", validateEmail);
     passwordInput.addEventListener("blur", validatePassword);
 
-    // Form submission handler
+    // Form submission handler - Send OTP via backend
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
         if (!validateForm()) {
             otpError.innerHTML = "Please fix all errors before proceeding!";
+            otpError.style.color = "#f44336";
             return;
         }
 
-        // Generate and send OTP
+        // Send OTP via backend
         const email = emailInput.value;
-        generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+        otpError.innerHTML = "Sending OTP...";
+        otpError.style.color = "#2196F3";
 
-        const templateParams = {
-            to_email: email,
-            otp: generatedOTP,
-        };
-
-        emailjs.send('service_pl2gk4v', 'template_8k86xhk', templateParams)
-            .then(response => {
+        fetch('/send-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 otpContainer.style.display = 'block';
                 verifyOtpBtn.style.display = "block";
                 otpError.innerHTML = "✅ OTP sent to your email";
-            })
-            .catch(error => {
-                otpError.innerHTML = "❌ Failed to send OTP: " + error.message;
-            });
+                otpError.style.color = "#4CAF50";
+            } else {
+                otpError.innerHTML = "❌ Failed to send OTP: " + data.message;
+                otpError.style.color = "#f44336";
+            }
+        })
+        .catch(error => {
+            otpError.innerHTML = "❌ Failed to send OTP. Please try again.";
+            otpError.style.color = "#f44336";
+            console.error('Error:', error);
+        });
     });
 
-    // OTP verification handler
+    // OTP verification handler - Verify via backend then process login
     verifyOtpBtn.addEventListener("click", function () {
         const enteredOTP = otpInputField.value;
+        const email = emailInput.value;
 
-        if (enteredOTP === generatedOTP) {
-            otpError.innerHTML = "✅ OTP verified. Processing login...";
-
-            // Get form data
-            const username = usernameInput.value;
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            const district = districtSelect.value;
-
-            // Create AJAX request
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/adminLogin", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            
-            // Prepare data
-            const data = JSON.stringify({
-                username: username,
-                email: email,
-                password: password,
-                district_name: district
-            });
-            
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            otpError.innerHTML = "✅ " + response.message;
-                            
-                            // Redirect to admin dashboard after successful login
-                            setTimeout(() => {
-                                window.location.href = "/admin-dashboard";
-                            }, 2000);
-                        } catch (e) {
-                            otpError.innerHTML = "✅ Login successful!";
-                            setTimeout(() => {
-                                window.location.href = "/admin-dashboard";
-                            }, 2000);
-                        }
-                    } else {
-                        otpError.innerHTML = "❌ Login failed: " + xhr.responseText;
-                    }
-                }
-            };
-
-            xhr.send(data);
-        } else {
-            otpError.innerHTML = "❌ Incorrect OTP. Try again.";
+        if (!enteredOTP || enteredOTP.length !== 6) {
+            otpError.innerHTML = "❌ Please enter a valid 6-digit OTP";
+            otpError.style.color = "#f44336";
+            return;
         }
+
+        otpError.innerHTML = "Verifying OTP...";
+        otpError.style.color = "#2196F3";
+
+        // Verify OTP with backend
+        fetch('/verify-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                email: email,
+                otp: enteredOTP 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                otpError.innerHTML = "✅ OTP verified. Processing login...";
+                otpError.style.color = "#4CAF50";
+
+                // Get form data
+                const username = usernameInput.value;
+                const password = passwordInput.value;
+                const district = districtSelect.value;
+
+                // Create AJAX request for admin login
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/adminLogin", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                
+                // Prepare data
+                const loginData = JSON.stringify({
+                    username: username,
+                    email: email,
+                    password: password,
+                    district_name: district
+                });
+                
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                otpError.innerHTML = "✅ " + response.message;
+                                otpError.style.color = "#4CAF50";
+                                
+                                // Redirect to admin dashboard after successful login
+                                setTimeout(() => {
+                                    window.location.href = "/admin-dashboard";
+                                }, 2000);
+                            } catch (e) {
+                                otpError.innerHTML = "✅ Login successful!";
+                                otpError.style.color = "#4CAF50";
+                                setTimeout(() => {
+                                    window.location.href = "/admin-dashboard";
+                                }, 2000);
+                            }
+                        } else {
+                            otpError.innerHTML = "❌ Login failed: " + xhr.responseText;
+                            otpError.style.color = "#f44336";
+                        }
+                    }
+                };
+
+                xhr.send(loginData);
+            } else {
+                otpError.innerHTML = "❌ " + (data.message || "Invalid OTP. Please try again.");
+                otpError.style.color = "#f44336";
+            }
+        })
+        .catch(error => {
+            otpError.innerHTML = "❌ Verification failed. Please try again.";
+            otpError.style.color = "#f44336";
+            console.error('Error:', error);
+        });
     });
 });

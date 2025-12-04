@@ -1,29 +1,10 @@
 // Unified script for form validation and OTP handling
-document.addEventListener("DOMContentLoaded", function () {
-    // all your JS code here
-
-// EmailJS public key
-emailjs.init('1RHpGS2tq0gxGer21');
 
 let generatedOTP = "";
 
-const form = document.querySelector(".sign-up-form");
-const emailInput = document.getElementById("contact-email");
-const otpInputDiv = document.getElementById("otp-container");
-const otpInputField = document.getElementById("otp-input");
-const otpError = document.getElementById("otp-error");
-const submitError = document.getElementById("submit-error");
-
-
-
-// ------- Validation Logic --------
-
-var nameError = document.getElementById("name-error-signup");
-var emailError = document.getElementById("email-error");
-var passwordError = document.getElementById("password-error");
-var confirmPasswordError = document.getElementById("confirm-password-error");
-
-function validateName() {
+// Make validation functions global so they can be called from HTML onkeyup
+window.validateName = function() {
+    var nameError = document.getElementById("name-error-signup");
     var name = document.getElementById("signup-username").value;
     if (name.length === 0) {
         nameError.innerHTML = "Username is required!";
@@ -41,7 +22,9 @@ function validateName() {
     return true;
 }
 
-function validateEmail() {
+window.validateEmail = function() {
+    var emailError = document.getElementById("email-error");
+    var emailInput = document.getElementById("contact-email");
     var email = emailInput.value;
     if (email.length === 0) {
         emailError.innerHTML = "Email is required";
@@ -55,7 +38,9 @@ function validateEmail() {
     return true;
 }
 
-function checkPassword() {
+window.checkPassword = function() {
+    var passwordError = document.getElementById("password-error");
+    var confirmPasswordError = document.getElementById("confirm-password-error");
     const password = document.getElementById("signup-password").value;
     const confirmPassword = document.getElementById("confirm-password").value;
 
@@ -81,6 +66,24 @@ function checkPassword() {
     confirmPasswordError.innerHTML = '<i class="fas fa-check-circle"></i>';
     return true;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+const form = document.querySelector(".sign-up-form");
+const emailInput = document.getElementById("contact-email");
+const otpInputDiv = document.getElementById("otp-container");
+const otpInputField = document.getElementById("otp-input");
+const otpError = document.getElementById("otp-error");
+const submitError = document.getElementById("submit-error");
+
+
+
+// ------- Validation Logic --------
+
+var nameError = document.getElementById("name-error-signup");
+var emailError = document.getElementById("email-error");
+var passwordError = document.getElementById("password-error");
+var confirmPasswordError = document.getElementById("confirm-password-error");
 
 function validateForm() {
     if (!validateName() || !validateEmail() || !checkPassword()) {
@@ -123,75 +126,121 @@ form.addEventListener("submit", function (e) {
         return;
     }
 
-    // If form is valid, generate and send OTP
+    // If form is valid, send OTP via server
     const email = emailInput.value;
-    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
-    const templateParams = {
-        to_email: email,
-        otp: generatedOTP,
-    };
+    // Show loading state
+    otpError.innerHTML = "📨 Sending OTP...";
+    otpError.style.color = "#1976d2";
 
-    emailjs.send('service_pl2gk4v', 'template_8k86xhk', templateParams)
-        .then(response => {
+    // Send OTP request to server
+    fetch('/send-otp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
             otpInputDiv.style.display = 'block';
-            document.getElementById("verify-otp-btn").style.display = "block"; // <-- ADD THIS
+            document.getElementById("verify-otp-btn").style.display = "block";
             otpError.innerHTML = "✅ OTP sent to your email";
-        })
-        .catch(error => {
-            otpError.innerHTML = "❌ Failed to send OTP";
-        });
+            otpError.style.color = "#28a745";
+        } else {
+            otpError.innerHTML = "❌ " + data.message;
+            otpError.style.color = "#dc3545";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        otpError.innerHTML = "❌ Failed to send OTP. Please try again.";
+        otpError.style.color = "#dc3545";
+    });
 });
 
 document.getElementById("verify-otp-btn").addEventListener("click", function () {
     const enteredOTP = otpInputField.value;
+    const email = document.getElementById("contact-email").value;
 
-    if (enteredOTP === generatedOTP) {
-        otpError.innerHTML = "✅ OTP verified. You can now register.";
-
-        //Get Form DAta
-        const username = document.getElementById("signup-username").value;
-        const email = document.getElementById("contact-email").value;
-        const password = document.getElementById("signup-password").value;
-
-     // Create AJAX request
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/signup", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        //Prepare Data
-        const data = JSON.stringify({
-            username: username,
-            email: email,
-            password: password
-        });
-        
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        otpError.innerHTML = "✅ " + response.message;
-                        
-                        // Redirect to profile page after successful registration
-                        setTimeout(() => {
-                            window.location.href = "/profile";
-                        }, 2000);
-                    } catch (e) {
-                        otpError.innerHTML = "✅ Registration successful!";
-                        setTimeout(() => {
-                            window.location.href = "/profile";
-                        }, 2000);
-                    }
-                } else {
-                    otpError.innerHTML = "❌ Registration failed: " + xhr.responseText;
-                }
-            }
-        };
-
-        xhr.send(data);
-    } else {
-        otpError.innerHTML = "❌ Incorrect OTP. Try again.";
+    if (!enteredOTP || enteredOTP.length !== 6) {
+        otpError.innerHTML = "❌ Please enter a valid 6-digit OTP";
+        otpError.style.color = "#dc3545";
+        return;
     }
+
+    // Show verifying state
+    otpError.innerHTML = "🔄 Verifying OTP...";
+    otpError.style.color = "#1976d2";
+
+    // Verify OTP with server
+    fetch('/verify-otp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            email: email, 
+            otp: enteredOTP 
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            otpError.innerHTML = "✅ OTP verified. Creating your account...";
+            otpError.style.color = "#28a745";
+
+            // Get Form Data
+            const username = document.getElementById("signup-username").value;
+            const password = document.getElementById("signup-password").value;
+
+            // Create AJAX request for signup
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/signup", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            
+            const signupData = JSON.stringify({
+                username: username,
+                email: email,
+                password: password
+            });
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            otpError.innerHTML = "✅ " + response.message;
+                            
+                            // Redirect to profile page after successful registration
+                            setTimeout(() => {
+                                window.location.href = "/profile";
+                            }, 2000);
+                        } catch (e) {
+                            otpError.innerHTML = "✅ Registration successful!";
+                            setTimeout(() => {
+                                window.location.href = "/profile";
+                            }, 2000);
+                        }
+                    } else {
+                        otpError.innerHTML = "❌ Registration failed: " + xhr.responseText;
+                        otpError.style.color = "#dc3545";
+                    }
+                }
+            };
+
+            xhr.send(signupData);
+        } else {
+            otpError.innerHTML = "❌ " + data.message;
+            otpError.style.color = "#dc3545";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        otpError.innerHTML = "❌ Failed to verify OTP. Please try again.";
+        otpError.style.color = "#dc3545";
+    });
 });
 
 });
